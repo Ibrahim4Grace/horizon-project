@@ -1,0 +1,122 @@
+
+<%- include (`../partials/adminHtmlTag`); -%>
+<body>
+  <div
+    class="flex h-screen bg-gray-50 dark:bg-gray-900"
+    :class="{ 'overflow-hidden': isSideMenuOpen }"
+  >
+
+    <%- include (`../partials/adminSidebar`); -%>
+
+    <div class="flex flex-col flex-1 w-full">
+      <%- include (`../partials/adminHeader`); -%>
+  
+      <main class="h-full overflow-y-auto">
+        <div class="container px-6 mx-auto grid">
+          <h2
+            class="my-6 text-2xl font-semibold text-gray-700 dark:text-gray-200"
+          >
+            Profile Settings
+          </h2>
+
+
+       <div
+         class="px-4 py-3 mb-8 bg-white rounded-lg shadow-md dark:bg-gray-800"
+       >
+         <!-- Helper text -->
+         <label class="block mt-4 text-sm">
+          <span class="text-gray-700 dark:text-gray-400">
+              Full Name 
+          </span>
+          <input
+            class="block w-full mt-1 text-sm dark:text-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray form-input"
+            placeholder="Jane Doe" name="full_name" type="text"
+          />
+          <div id="full_nameError" class="text-danger"></div>
+        </label>
+
+          <!-- Helper text -->
+          <label class="block mt-4 text-sm">
+            <span class="text-gray-700 dark:text-gray-400">
+              Date Of Birth
+            </span>
+            <input
+              class="block w-full mt-1 text-sm dark:text-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray form-input"
+              placeholder="date of birth" name="dob" type="date"
+            />
+            <div id="dobError" class="text-danger"></div>
+          </label>
+ 
+
+         <!-- Helper text -->
+         <label class="block mt-4 text-sm">
+           <span class="text-gray-700 dark:text-gray-400">
+            Email Address
+           </span>
+           <input
+             class="block w-full mt-1 text-sm dark:text-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray form-input"
+             placeholder="email address" type="email" name="email"
+           />
+           <div id="emailError" class="text-danger"></div>
+         </label>
+
+          <!-- Helper text -->
+          <label class="block mt-4 text-sm">
+            <span class="text-gray-700 dark:text-gray-400">
+              Phone Number
+            </span>
+            <input
+              class="block w-full mt-1 text-sm dark:text-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray form-input"
+              placeholder="Phone number" name="phone_number" type="text"
+            />
+            <div id="phone_numberError" class="text-danger"></div>
+          </label>
+
+           <!-- Helper text -->
+         <label class="block mt-4 text-sm">
+          <span class="text-gray-700 dark:text-gray-400">
+            Home Address
+          </span>
+          <input
+            class="block w-full mt-1 text-sm dark:text-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray form-input"
+            placeholder="Home address" name="home_address" type="text"
+          />
+          <div id="home_addressError" class="text-danger"></div>
+        </label>
+
+
+         <!-- Helper text -->
+         <label class="block mt-4 text-sm">
+          <span class="text-gray-700 dark:text-gray-400">
+           Current Password
+          </span>
+          <input
+            class="block w-full mt-1 text-sm dark:text-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray form-input"
+            placeholder="Jane Doe" name="current_password" type="password"
+          />
+          <div id="passwordError" class="text-danger"></div>
+        </label>
+
+         <!-- Helper text -->
+         <label class="block mt-4 text-sm">
+          <span class="text-gray-700 dark:text-gray-400">
+           New Password
+          </span>
+          <input
+            class="block w-full mt-1 text-sm dark:text-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray form-input"
+            placeholder="password" name="password" type="password"
+            />
+            <div id="passwordError" class="text-danger"></div>
+        </label>
+       </div>
+
+
+
+       
+        </div>
+      </main>
+    </div>
+
+  </div>
+</body>
+</html>

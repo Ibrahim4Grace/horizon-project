@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Horznet Techologies</title>
+
+    <!-- TailwindCSS -->
+    <link
+      href="https://unpkg.com/tailwindcss@^2/dist/tailwind.min.css"
+      rel="stylesheet"
+    />
+
+    <link rel="stylesheet" href="../../css/styles.css" />
+
+  </head>
+
+  <body>
+    <nav class="px-10 py-5 w-screen">
+      <div class="grid grid-cols-3">
+        <div class="col-span-1 py-1">
+          <img class="h-8" src="../../img/trainee.jpg" alt="" />
+        </div>
+        <div class="col-span-2 justify-end hidden md:flex">
+          <ul class="text-xs">
+            <li><a href="/">Home</a></li>
+            <li><a href="/">About</a></li>
+            <li><a href="/contact">Contact</a></li>
+            <li><a href="/">Services</a></li>
+            <li>
+                <a href="/auth/user/login" class="xx block bg-yellow-400 py-3 px-10" style="
+                            background:#ffa724;
+                           ">
+                            Sign In
+                    </a>
+       
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <header class="min-h-screen w-full pt-16 md:pt-20">
+        <div class="container mx-auto px-4 md:px-8 lg:px-16">
+            <!-- Main Content Container -->
+            <div class="flex flex-col lg:grid lg:grid-cols-2 gap-8 lg:gap-16">
+                <!-- Image Section - Hidden on mobile -->
+                <div class="hidden md:flex justify-center items-center">
+                    <img src="../../img/icon/Logic-pana.svg" 
+                         alt="Login illustration" 
+                         class="w-full max-w-md h-auto">
+                </div>
+
+                <!-- Form Section -->
+                <div class="w-full px-4 sm:px-8 lg:px-12">
+                    <div class="bg-gray-50 rounded-lg shadow-md p-6 sm:p-8 lg:p-12">
+                      <p class="text-xs ">
+                        Already have an account?
+                        <span class="text-yellow-500 font-bold">
+                            <a href="/auth/user/login">Login</a></span
+                        >
+                      </p>
+                      <div id="generalError" class="text-danger"></div>
+                        
+
+                        <form id="registrationForm"  data-url="/auth/user/register" method="post" class="mt-6 sm:mt-8 space-y-4">
+                            <input
+                            class="text-xs w-full p-4 shadow focus:outline-none focus:ring-1"
+                            type="text"
+                            placeholder="Your name"
+                            name="full_name"
+                          />
+                          <div id="full_nameError" class="text-danger"></div>
+                          <input
+                          class="text-xs w-full p-4 shadow focus:outline-none focus:ring-1"
+                          type="email"
+                          placeholder="email address"
+                          name="email"
+                        />
+                        <div id="emailError" class="text-danger"></div>
+
+                        <% let courseInterest = ["Web development", "Cyber security","Data networking","Coding","Enterpise network development "]; %>
+                        <select class="text-xs w-full p-4 shadow focus:outline-none focus:ring-1" name="course_interest" required>
+                          <option value="" disabled selected>Select your preferred course option</option>
+                          <% courseInterest.forEach((option) => { %>
+                            <option value="<%- option %>"><%- option %></option>
+                          <% }) %>
+                        </select>
+                        <div id="course_interestError" class="text-danger"></div>
+                 
+                        <% let classOption = ["Inhouse", "Online"]; %>
+                        <select class="text-xs w-full p-4 shadow focus:outline-none focus:ring-1" name="class_option" required>
+                          <option value="" disabled selected>Select your preferred class option</option>
+                          <% classOption.forEach((option) => { %>
+                            <option value="<%- option %>"><%- option %></option>
+                          <% }) %>
+                        </select>
+                        <div id="class_optionError" class="text-danger"></div>
+
+                        <input
+                        class="text-xs w-full p-4 shadow focus:outline-none focus:ring-1"
+                        type="text"
+                        placeholder="phone number"
+                        name="phone_number"
+                      />
+                      <div id="phone_numberError" class="text-danger"></div>
+                        
+                          <input
+                            class="text-xs w-full p-4 shadow focus:outline-none focus:ring-1"
+                            type="password"
+                            placeholder="Your password"
+                            name="password"
+                          />
+                          <div id="passwordError" class="text-danger"></div>
+
+
+                                <button
+                                class="w-full py-3 px-6 text-sm text-white font-medium rounded-md bg-gradient-to-r from-[#ebb52d] to-[#ffa724] hover:from-[#ffa724] hover:to-[#ebb52d] transition-all duration-200 gradienties-button"
+                                type="submit"
+                                id="submitButton"
+                                style="background: linear-gradient(to right, #ebb52d, #ffa724);
+                                 margin-top: 25px;"
+                              >
+                                Sign Up
+                              </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+
+    <%- include (`../../partials/authFooter`); -%>
+
+    </html>
+  </body>
+</html>

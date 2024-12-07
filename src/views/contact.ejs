@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Horznet Techologies</title>
+
+    <!-- TailwindCSS -->
+    <link
+      href="https://unpkg.com/tailwindcss@^2/dist/tailwind.min.css"
+      rel="stylesheet"
+    />
+
+    <link rel="stylesheet" href="../css/styles.css" />
+  </head>
+
+  <body>
+    <nav class="px-10 py-5 w-screen">
+      <div class="grid grid-cols-3">
+        <div class="col-span-1 py-1">
+          <img class="h-8" src="../img/trainee.jpg" alt="" />
+        </div>
+        <div class="col-span-2 justify-end hidden md:flex">
+          <ul class="text-xs">
+            <li><a href="./">Home</a></li>
+            <li><a href="/">About</a></li>
+            <li><a href="/contact">Contact</a></li>
+            <li><a href="/">Services</a></li>
+            <li>
+                <a href="/auth/login" class="xx block bg-yellow-400 py-3 px-10" style="
+                            background:#ffa724;
+                           ">
+                            Sign In
+                    </a>
+       
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <header class="min-h-screen w-full pt-16 md:pt-20">
+        <div class="container mx-auto px-4 md:px-8 lg:px-16">
+            <!-- Main Content Container -->
+            <div class="flex flex-col lg:grid lg:grid-cols-2 gap-8 lg:gap-16">
+                <!-- Image Section - Hidden on mobile -->
+                <div class="hidden md:flex justify-center items-center">
+                    <img src="../img/icon/Logic-pana.svg" 
+                         alt="Login illustration" 
+                         class="w-full max-w-md h-auto">
+                </div>
+
+                <!-- Form Section -->
+                <div class="w-full px-4 sm:px-8 lg:px-12">
+                    <div class="bg-gray-50 rounded-lg shadow-md p-6 sm:p-8 lg:p-12">
+                        <h1 class="text-2xl sm:text-3xl font-semibold text-gray-800">
+                            Contact Us
+                        </h1>
+                        
+
+                        <form class="mt-6 sm:mt-8 space-y-4">
+                            <input
+                            class="text-xs w-full p-4 shadow focus:outline-none focus:ring-1"
+                            type="text"
+                            placeholder="Name"
+                          />
+                          <input
+                            class="text-xs w-full p-4 shadow focus:outline-none focus:ring-1"
+                            type="email"
+                            placeholder="email address"
+                          />
+    
+                          <textarea
+                          class="text-xs w-full p-4 shadow focus:outline-none focus:ring-1"
+                          placeholder="Enter your text here"
+                          maxlength="250"
+                        ></textarea>
+
+                                <button
+                                class="w-full py-3 px-6 text-sm text-white font-medium rounded-md bg-gradient-to-r from-[#ebb52d] to-[#ffa724] hover:from-[#ffa724] hover:to-[#ebb52d] transition-all duration-200 gradienties-button"
+                                type="submit"
+                                style="background: linear-gradient(to right, #ebb52d, #ffa724);"
+                              >
+                                Sign Up
+                              </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+
+        <!-- <header class="h-screen w-screen overflow-hidden">
+            <div class="h-full w-full container mx-auto px-4 md:px-8 lg:px-12 flex items-center">
+              <div class="w-full grid md:grid-cols-2 gap-4 md:gap-8">
+          
+                <div class="hidden md:flex justify-center items-center">
+                  <img 
+                    class="w-auto h-auto max-h-[70vh] object-contain" 
+                    src="../img/icon/Logic-pana.svg" 
+                    alt=""
+                  />
+                </div>
+          
+      
+                <div class="w-full md:px-4">
+                  <div class="bg-gray-50 p-6 md:p-8 lg:p-10 h-fit">
+                    <h1 class="text-2xl md:text-3xl font-semibold">Contact Us</h1>
+                    
+                    <form class="space-y-3 mt-6">
+                      <input
+                        class="text-xs w-full p-4 shadow focus:outline-none focus:ring-1"
+                        type="text"
+                        placeholder="Name"
+                      />
+                      <input
+                        class="text-xs w-full p-4 shadow focus:outline-none focus:ring-1"
+                        type="email"
+                        placeholder="email address"
+                      />
+
+                      <textarea
+                      class="text-xs w-full p-4 shadow focus:outline-none focus:ring-1"
+                      placeholder="Enter your text here"
+                      maxlength="250"
+                    ></textarea>
+                    
+                    <button
+                    class="w-full py-3 px-6 text-sm text-white font-medium rounded-md bg-gradient-to-r from-[#ebb52d] to-[#ffa724] hover:from-[#ffa724] hover:to-[#ebb52d] transition-all duration-200"
+                    type="submit"
+                    style="background: linear-gradient(to right, #ebb52d, #ffa724);"
+                  >
+                    Sign Up
+                  </button>
+
+                    </form>
+          
+                  </div>
+                </div>
+              </div>
+            </div>
+          </header> -->
+    
+
+
+      <script
+        src="https://code.jquery.com/jquery-3.6.0.min.js "
+        integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4="
+        crossorigin=" anonymous "
+      ></script>
+      <script
+        src="https://cdnjs.cloudflare.com/ajax/libs/tilt.js/1.0.3/tilt.jquery.min.js "
+        integrity="sha512-14AZ/DxUrlF26z6v7egDkpJHKyJRn/7ue2BgpWZ/fmqrqVzf4PrQnToy99sHmKwzKev/VZ1tjPxusuTV/n8CcQ=="
+        crossorigin=" anonymous "
+        referrerpolicy="no-referrer "
+      ></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.7.0/gsap.min.js "></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.7.0/ScrollTrigger.min.js "></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.7.0/ScrollToPlugin.min.js "></script>
+
+      <script
+        src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js "
+        integrity="sha512-z4OUqw38qNLpn1libAN9BsoDx6nbNFio5lA6CuTp9NlK83b89hgyCVq+N5FdBJptINztxn1Z3SaKSKUS5UP60Q=="
+        crossorigin=" anonymous "
+        referrerpolicy="no-referrer "
+      ></script>
+      <script
+        type="text/javascript "
+        src="//cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js "
+      ></script>
+      <script src="../js/scroll.js "></script>
+    </html>
+  </body>
+</html>

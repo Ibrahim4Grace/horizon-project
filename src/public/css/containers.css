@@ -1,0 +1,138 @@
+body {
+  overflow-x: hidden;
+  background: #28292d;
+}
+
+body::-webkit-scrollbar {
+  width: 10px;
+}
+
+body::-webkit-scrollbar-track {
+  background-color: #20242a;
+}
+
+body::-webkit-scrollbar-thumb {
+  background-color: #555;
+}
+
+p {
+  letter-spacing: 0.05rem;
+}
+
+button:hover {
+  color: #ffa724;
+}
+
+.xx {
+  opacity: 1;
+}
+
+.xx:hover {
+  background: #fefefe !important;
+  color: #111;
+}
+
+nav {
+  z-index: 999;
+  position: absolute;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  ul {
+    li {
+      color: white;
+      display: inline-block;
+      font-size: 0.8rem;
+      a {
+        transition: 0.2s ease-in-out;
+        opacity: 0.7;
+        padding: 0 1rem;
+      }
+      a:hover {
+        opacity: 1;
+      }
+    }
+  }
+}
+
+.stickynav {
+  background: #1d1e21;
+  position: fixed !important;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+header {
+  background-image: url('../img/bg.jpg');
+  min-height: 100vh;
+  padding-top: 10rem;
+  padding-bottom: 10rem;
+  background-size: cover;
+  background-position: bottom;
+  .header-cards {
+    margin-top: 5rem;
+    padding-left: 2rem;
+    .header-imgcard {
+      height: 450px;
+      border-radius: 100px 0px;
+      background-position: center;
+    }
+    .header-ycard {
+      width: 125px;
+      height: 200px;
+      border-radius: 50px 0px;
+      float: right;
+    }
+    .header-ycard2 {
+      width: 125px;
+      height: 200px;
+      border-radius: 50px 0px;
+      float: left;
+    }
+    .col-span-1:nth-child(1) {
+      margin-top: 50px;
+    }
+    .col-span-1:nth-child(3) {
+      margin-top: -50px;
+    }
+    .col-span-1:nth-child(4) {
+      margin-top: -150px;
+    }
+    .col-span-1:nth-child(5) {
+      margin-top: -300px;
+    }
+  }
+}
+
+.about {
+  .whyus-card {
+    background: #2e323a;
+  }
+}
+
+.gallery {
+  img: {
+    transition: 0.3s ease-in-out;
+  }
+  img:hover {
+    opacity: 0.7;
+  }
+}
+
+.journey {
+  margin-top: -10rem;
+  .main {
+    padding-top: 10rem;
+  }
+}
+
+.modal {
+  position: fixed;
+  display: none;
+  top: 0;
+  height: 100vh;
+  width: 100vw;
+  background: rgba(0, 0, 0, 0.6);
+  z-index: 1000;
+}
+
+.modalopen {
+  display: flex;
+}

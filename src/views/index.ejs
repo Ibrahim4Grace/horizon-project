@@ -1,0 +1,577 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Horznet Techologies</title>
+
+    <!-- TailwindCSS -->
+    <link href="https://unpkg.com/tailwindcss@^2/dist/tailwind.min.css" rel="stylesheet" />
+
+    <link rel="stylesheet" href="../css/styles.css" />
+    <link rel="stylesheet" href="../css/main.css" />
+    <link rel="stylesheet" href="../css/containers.css" />
+
+
+</head>
+<style>
+    @import url('https://fonts.googleapis.com/css2?family=Raleway:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+
+* {
+font-family: 'Raleway', sans-serif;
+}
+</style>
+
+<body>
+    <div class="preloader flex flex-col justify-center items-center">
+        <div class="sk-folding-cube">
+            <div class="sk-cube1 sk-cube"></div>
+            <div class="sk-cube2 sk-cube"></div>
+            <div class="sk-cube4 sk-cube"></div>
+            <div class="sk-cube3 sk-cube"></div>
+        </div>
+        <br/>
+        <div class="text-center">
+            <h1 class="text text-white">
+                Horznet<br/> Technology
+            </h1>
+        </div>
+    </div>
+
+    <nav class="px-10 py-5 w-screen">
+        <div class="grid grid-cols-3">
+            <div class="col-span-1 py-1">
+                <img class="h-8" src="../img/logo/aite.svg" alt="" />
+            </div>
+            <div class="col-span-2 justify-end hidden md:flex">
+                <ul class="text-xs">
+                    <li><a href="/">Home</a></li>
+                    <li><a onclick="scrollto('about')" href="#">About</a></li>
+
+                    <li><a onclick="scrollto('offer')" href="#">Services</a></li>
+                    <li><a href="/contact">Contact</a></li>
+                    <li>
+                        <a href="/auth/login" class="xx block bg-yellow-400 py-3 px-10" style="
+                            background:#ffa724;
+                           ">
+                            Sign In
+                    </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+
+
+    <header class=" w-screen">
+        <div class="2xl:container 2xl:mx-auto px-10 md:px-20 header_main">
+            <p class="text-gray-400" id="hd">Horznet Technologies Ltd.</p>
+            <h1 class="text-4xl md:text-6xl text-white w-4/5 pt-5 pb-10" id="hd">
+                Horznet Technology for for individuals and businesses.
+            </h1>
+            <button id="hd" class="xx text-xs text-white px-5 py-3" style=" background:#ffa724;">
+                <a onclick="scrollto('offer')" href="#">Explore our Services</a>
+        </button>
+        </div>
+        <div class=" 2xl:container 2xl:mx-auto header-cards w-screen gap-5 grid grid-cols-5 hidden md:grid">
+            <div class="col-span-1" id="hd">
+                <div class="header-imgcard bg-cover shadow-lg" style="background-image: url( 'https://www.wagonslearning.com/new/wp-content/uploads/bfi_thumb/4-Essential-Qualities-of-Corporate-Trainer-1024x468-ola4d46ulpb1dslgujvgr2dn2z3eybf431xa6bpik6.jpg')"></div>
+            </div>
+            <div class="col-span-1" id="hd">
+                <div class="header-ycard bg-yellow-400 bg-cover"></div>
+                <div class="header-imgcard w-full bg-cover shadow-lg" style=" margin-top: 225px; background-image: url( 'https://cdn.outsource2india.com/software/images/corporate-it-training-services.jpg');"></div>
+            </div>
+            <div class="col-span-1" id="hd">
+                <div class="header-imgcard w-full bg-cover shadow-lg" style="background-image: url( 'https://www.bbva.com/wp-content/uploads/2018/12/Computer-Code.jpg')"></div>
+            </div>
+            <div class="col-span-1" id="hd">
+                <div class="header-imgcard w-full bg-cover shadow-lg" style="background-image: url( '../img/admin-data.jpg')"></div>
+            </div>
+            <div class="col-span-1" id="hd">
+                <div class="header-imgcard w-full bg-cover shadow-lg" style=" margin-bottom: 25px; background-image: url('../img/mindful-office.jpg')"></div>
+                <div class="header-ycard2 bg-yellow-400 bg-cover"></div>
+            </div>
+        </div>
+    </header>
+
+    <section class="about py-10">
+        <a name="about"></a>
+        <div class="2xl:container 2xl:mx-auto grid grid-cols-1 md:grid-cols-2 gap-5">
+            <div class="col-span-1 grid grid-cols-1 md:grid-cols-2 px-10 md:px-20 pb-20 gap-5">
+                <div class="col-span-1 flex flex-col">
+                    <div class="whyus-card shadow-lg p-8" id="ab">
+                        <div class="h-10 w-10 whyus-card_image pr-3">
+                            <img src="../img/icon/badge.svg" alt="">
+                        </div>
+                        <h1 class="text-white mt-5 font-bold">Certified Professionals</h1>
+                        <p class="text-gray-400 mt-5 text-xs leading-5">
+                            You will be trained by certified and experienced professionals, Who will teach you based on real work scenarios.
+                        </p>
+                        <div>
+                            
+                        </div>
+                    </div>
+
+                    <div class="whyus-card shadow-lg mt-5 p-8" id="ab">
+                        <div class="h-10 w-10 whyus-card_image pr-3">
+                            <img src="../img/icon/class.svg" alt="">
+                        </div>
+                        <h1 class="text-white mt-5 font-bold">Well Equipped Classrooms</h1>
+                        <p class="text-gray-400 mt-5 text-xs leading-5">
+                            Work with required infrastructures for proper learning. AITE
+ensures updated softwares and hardwares.
+                        </p>
+                        <div>
+                           
+                        </div>
+                    </div>
+                </div>
+                <div class="col-span-1 flex flex-col mt-20">
+                    <div class="whyus-card shadow-lg p-8" id="ab">
+                        <div class="h-10 w-10 whyus-card_image pr-3">
+                            <img src="../img/icon/open-book.svg" alt="">
+                        </div>
+                        <h1 class="text-white mt-5 font-bold">Standard Courses</h1>
+                        <p class="text-gray-400 mt-5 text-xs leading-5">
+                            Choose from finely selected courses that comes with practical based learning 
+environment and up-to date contents. 
+                        </p>
+                        <div>
+                            
+                        </div>
+                    </div>
+
+                    <div class="whyus-card shadow-lg mt-5 p-8" id="ab" style="background: linear-gradient( 160.1deg, #ebb52d 5.95%, #ffa724 104.85% )">
+                        <div class="h-10 w-10 whyus-card_image pr-3">
+                            <img src="../img/icon/lecture.svg" alt="">
+                        </div>
+                        <h1 class="text-white mt-5 font-bold">In-House Training</h1>
+                        <p class="text-gray-100 mt-5 text-xs leading-5">
+                            We offer training program to create learning opportunities from within 
+                            the organization resulting more focused, convinient and cost saving 
+                            training.
+                        </p>
+                        <div>
+                           
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-span-1 px-10 md:px-20">
+                <h1 class="text-2xl md:text-3xl font-bold text-white" id="ab">
+                    Your syndicate for IT trainings. We hire qualified and real world professionals to give you all the resources you need to excel.
+                </h1>
+                <p class="py-5 md:py-20 text-gray-50 font-light text-xs leading-5" id="ab">
+                    Horznet Technology is an Institute established on 2010 for the sole purpose of providing quality computer training with affordable pricing. With over 200 choices for anyone to select, we have a wide range of course selection. While our trainers also customize the course content as per required to your requirement. "A course made just for you" as our Head Trainer James Fadairo Muyiwa.
+                    <br/><br/>
+                    Horznet Technology is a pioneer in computer training. We have well equipped facilities with all the necessary high end computers and devices to give you the best experience. Our trainers are highly qualified and experienced in both teaching and working in their field.
+                </p>
+
+               
+            </div>
+        </div>
+    </section>
+
+    <section class="offer">
+        <a name="offer"></a>
+        <div class="2xl:container 2xl:mx-auto px-10 md:px-20">
+            <div class="sectiontitle text-2xl text-white py-20 font-bold" id="of">
+                What we offer.
+                <span></span>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-4 pb-20 gap-5">
+                <div class="col-span-1 p-5" id="of">
+                    <p class="text-xs text-gray-400 mb-1">01</p>
+                    <h1 class="text-white font-bold">Professional Trainings</h1>
+                    <p class="text-xs text-gray-400 mt-5">
+                        We offer qualified realtime professionals to guide you on your 
+                        journey with us.
+                    </p>
+                </div>
+                <div class="col-span-1 p-5" id="of">
+                    <p class="text-xs text-gray-400 mb-1">02</p>
+                    <h1 class="text-white font-bold">Corporate Trainings</h1>
+                    <p class="text-xs text-gray-400 mt-5">
+                        We help you in your business by training your employees for them to 
+grow and hone skills professionally and personally.
+                    </p>
+                </div>
+                <div class="col-span-1 p-5" id="of">
+                    <p class="text-xs text-gray-400 mb-1">03</p>
+                    <h1 class="text-white font-bold">Network Engineering</h1>
+                    <p class="text-xs text-gray-400 mt-5">
+                        We offer solutions and designs for your company's network and also 
+provide you with reliable services.
+                </div>
+                <div class="col-span-1 p-5" id="of">
+                    <p class="text-xs text-gray-400 mb-1">04</p>
+                    <h1 class="text-white font-bold">Carrer Counselling</h1>
+                    <p class="text-xs text-gray-400 mt-5">
+                        Are you failing to find your way toward your goal? Let us help you
+to achieve your goals.
+
+                    </p>
+                </div>
+                <div class="col-span-1 p-5" id="of">
+                    <p class="text-xs text-gray-400 mb-1">05</p>
+                    <h1 class="text-white font-bold">UI / UX Design</h1>
+                    <p class="text-xs text-gray-400 mt-5">
+                        Our developing team can create website with any sort of UI/UX that suits 
+your business profile.
+
+                    </p>
+                </div>
+                <div class="col-span-1 px-5 shadow-lg py-5 " id="of" style="background: linear-gradient( 160.1deg, #ebb52d 5.95%, #ffa724 104.85% )">
+                    <p class="text-xs text-gray-50 mb-1">06</p>
+                    <h1 class="text-black font-bold text-gray-50 drop-shadow">Web Design & Development</h1>
+                    <p class="text-xs text-gray-50 mt-5 drop-shadow">
+                        Get online and upraise your business by getting a web application of your choice.
+                    </p>
+                </div>
+                <div class="col-span-1 p-5" id="of">
+                    <p class="text-xs text-gray-400 mb-1">07</p>
+                    <h1 class="text-white font-bold">Mobile Applications</h1>
+                    <p class="text-xs text-gray-400 mt-5">
+                        We offer simple, scalable, efficient, multi-platform, customizable and real-time 
+                        mobile application for your and your client's comfort.
+                    </p>
+                </div>
+                <div class="col-span-1 p-5" id="of">
+                    <p class="text-xs text-gray-400 mb-1">08</p>
+                    <h1 class="text-white font-bold">Branding</h1>
+                    <p class="text-xs text-gray-400 mt-5">
+                        Want your business to be the talk of the town? We help you achieve that through branding.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="gallery">
+        <div class="2xl:container 2xl:mx-auto">
+            <div class="sectiontitle text-2xl text-white py-20 font-boldpx-10 md:px-20" id="gl">
+                A Glimpse into our world.
+                <span></span>
+            </div>
+        </div>
+
+        <div class="2xl:container 2xl:mx-auto grid grid-cols-6 md:grid-cols-12 gap-1 pb-20">
+            <div class="col-span-4 row-span-2" id="gl">
+                <img class="h-full w-full object-cover" src="../img/trainee.jpg" alt="" />
+            </div>
+            <div class="col-span-4 row-span-2" id="gl">
+                <img class="h-full w-full object-cover" src="../img/25_21c68d6e.jpg" alt="" />
+            </div>
+            <div class="col-span-4 row-span-2" id="gl">
+                <img class="h-full w-full object-cover" src="../img/4_84b2f80b.jpg" alt="" />
+            </div>
+    
+           
+        </div>
+    </section>
+
+    <section class="recommended">
+        <div class="2xl:container 2xl:mx-auto px-10 md:px-20">
+            <div class="sectiontitle text-2xl text-white py-20 font-bold" id="rd">
+                Recommended Sessions
+                <span></span>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-5">
+                <div class="col-span-1 bg-gray-700 shadow-lg" id="rd">
+                    <img class="w-full h-48 object-cover" src="https://www.xda-developers.com/files/2018/09/microsoft-excel-logo.png" alt="">
+
+                    <div class="p-5 text-white">
+                        <h1 class="font-semibold text-xl">Advanced Excel</h1>
+
+                        <p class="text-xs text-gray-300 mt-5 leading-5">
+                            Boost your Excel and Office skills and achieve a great deal more at work with our course! Go From Beginner To Advanced.
+                        </p>
+                    </div>
+                </div>
+                <div class="col-span-1 bg-gray-700 shadow-lg" id="rd">
+                    <img class="w-full h-48 object-cover" src="../img/network.jpg
+               " alt="">
+
+                    <div class="p-5 text-white">
+                        <h1 class="font-semibold text-xl">Data Networking</h1>
+
+                        <p class="text-xs text-gray-300 mt-5 leading-5">
+                            Learn the essentials of data networking, including protocols, network architecture, and troubleshooting, through practical, project-based learning.
+                        </p>
+
+                        
+                    </div>
+                </div>
+                <div class="col-span-1 bg-gray-700 shadow-lg" id="rd">
+                    <img class="w-full h-48 object-cover" src="https://digitalmarketology.com/wp-content/uploads/2018/09/What-to-Do-Before-You-Work-With-a-Web-Designer.jpg" alt="">
+
+                    <div class="p-5 text-white">
+                        <h1 class="font-semibold text-xl">Web Design & Dev</h1>
+
+                        <p class="text-xs text-gray-300 mt-5 leading-5">
+                            Learn modern Web Development fundamentals as well as advanced topics.
+                        </p>
+
+                       
+                    </div>
+                </div>
+                <div class="col-span-1 bg-gray-700 shadow-lg" id="rd">
+                    <img class="w-full h-48 object-cover" src="../img/cyber.jpg" alt="">
+
+                    <div class="p-5 text-white">
+                        <h1 class="font-semibold text-xl">Cyber Security</h1>
+
+                        <p class="text-xs text-gray-300 mt-5 leading-5">
+                            Master the fundamentals of cybersecurity and build secure systems with hands-on projects, covering network security, cryptography, ethical hacking, and more.
+
+                        </p>
+
+                        
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <section class="stories">
+        <div class="2xl:container 2xl:mx-auto px-10 md:px-20 py-20">
+            <div class="sectiontitle text-2xl text-white py-20 font-bold" id="st">
+                Success Stories
+                <span></span>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-20">
+                <div class="col-span-1 pt-20">
+                    <h1 class="text-2xl md:text-3xl lg:text-5xl leading-snug font-bold text-white" id="st">
+                        Still don't believe us?<br/>
+                         Know what our past associates think about us.
+                    </h1>
+                   <p class="text-xs text-white mt-5">
+                       Do things the right way with us.
+                   </p>
+                </div>
+
+                <div class="col-span-1">
+                    <div class="bg-gray-50 p-8 grid grid-cols-6 md:grid-cols-12 gap-10 shadow-lg" id="st">
+                        <div class="col-span-6 md:col-span-9">
+                            <p class="leading-4 text-sm text-gray-600 leading-6">
+                                I have taken multiple courses from horznet and have always been satisfied by the
+                                quality of education they provide.
+                                
+                            </p>
+
+                            <h1 class="font-bold text-xs mt-5">
+                                Jamal Sultan, Kampala Uganda
+                            </h1>
+                        </div>
+                        <div class="col-span-3 pt-10">
+                            <img class="rounded-full h-16  w-16 object-fit" src="../img/sani.jpg" alt="" />
+                        </div>
+                    </div>
+
+                    <div class="bg-gray-50 p-8 grid grid-cols-6 md:grid-cols-12 gap-10 mt-3 shadow-lg" id="st">
+                        <div class="col-span-6 md:col-span-9">
+                            <p class="leading-4 text-sm text-gray-600 leading-6">
+                                Exceptional teaching methods paired with a friendly and supportive atmosphere.
+                            </p>
+                            <br/>
+                            <h1 class="font-bold text-xs mt-5">
+                                Junior Thomas, Lagos Nigeria
+                            </h1>
+                        </div>
+                        <div class="col-span-3 pt-10">
+                            <img class="rounded-full h-16  w-16 object-fit" src="../img/junior.jpg" alt="" />
+                        </div>
+                    </div>
+
+                    <div class="bg-gray-50 p-8 grid grid-cols-6 md:grid-cols-12 gap-10 mt-3 shadow-lg" id="st">
+                        <div class="col-span-6 md:col-span-9">
+                            <p class="leading-4 text-sm text-gray-600 leading-6">
+                                An outstanding learning environment with passionate instructors who truly care about their students' success.
+                            </p>
+
+                            <h1 class="font-bold text-xs mt-5">
+                                John Bernard, Accra Ghana
+                            </h1>
+                        </div>
+                        <div class="col-span-3 pt-10">
+                            <img class="rounded-full h-16 w-16 object-cover" src="../img/sunday.jpg" alt="" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="journey">
+        <div class="2xl:container 2xl:mx-auto px-10 md:px-20 bg-cover grid grid-cols-1 md:grid-cols-2 gap-20 main" style="background-image: url( '../img/bggg.png')">
+            <div class="col-span-1">
+                <p class="text-gray-100 mb-10" id="jo">Subscribe to our Newsletter</p>
+                <h1 class="text-3xl md:text-4xl leading-snug font-bold text-white" id="jo">
+                    " The more that you read, the more things you will know. The more that you learn, the more places you’ll go. "
+                </h1>
+                <p class="py-10 text-gray-50 font-light text-sm leading-5" id="jo">
+                    - Dr. Francis
+
+                </p>
+
+                <div class="grid grid-cols-12" id="jo">
+                    <div class="col-span-9"><input class="w-full py-3 px-5 text-sm" type="text" placeholder="Email Address . . ."></div>
+                    <div class="col-span-3"><button class="xx bg-yellow-500 w-full py-3 text-sm text-white font-semibold">Subscribe</button></div>
+                </div>
+            </div>
+            <div class="col-span-1" id="jo">
+                <img src="../img/Larry__Communication 1.png" alt="">
+            </div>
+        </div>
+    </section>
+
+    <section class="numbers" id="jo">
+        <div class="2xl:container 2xl:mx-auto px-10 md:px-20 py-16 bg-gray-50 grid grid-cols-6 md:grid-cols-12">
+            <div class="col-span-6 md:col-span-4 font-semibold">
+                <h1 class="text-4xl">
+                    We been doing this since <span class="text-yellow-500">2010.</span>
+                </h1>
+                <p class="font-semibold mt-5 text-xs">
+                    We are pretty good at what we do.
+                </p>
+            </div>
+            <div class="col-span-6 md:col-span-2 md:col-start-6 flex flex-col items-center md:items-end pt-10">
+                <p class="text-xs font-semibold text-gray-500">Students trained</p>
+                <h1 class="text-4xl font-bold">30000 +</h1>
+            </div>
+            <div class="col-span-6 md:col-span-2 flex flex-col items-center md:items-end pt-10" ">
+                <p class="text-xs font-semibold text-gray-500 ">Courses</p>
+                <h1 class="text-4xl font-bold ">100 +</h1>
+        </div>
+        <div class="col-span-6 md:col-span-2 flex flex-col items-center md:items-end pt-10 "">
+                <p class="text-xs font-semibold text-gray-500">Corporations</p>
+                <h1 class="text-4xl font-bold">50 +</h1>
+            </div>
+        </div>
+    </section>
+
+
+
+    <iframe 
+    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d126764.83419951846!2d3.3193576072266224!3d6.622217102826979!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x103b921b2db05a8f%3A0xa1e7a786e65d702f!2sOgba%20Rd%2C%20Ikeja%2C%20Lagos!5e0!3m2!1sen!2sng!4v1716620528329" 
+    width="100%" 
+    height="600px" 
+    style="border:0;" 
+    allowfullscreen="" 
+    loading="lazy" 
+    referrerpolicy="no-referrer-when-downgrade">
+  </iframe>
+
+    <footer class="bg-cover footer" style="background-image: url( '../img/footer.png');">
+        <a name="footer"></a>
+        <div class="2xl:container 2xl:mx-auto px-10 md:px-20 py-20 grid grid-cols-12">
+            <div class="col-span-12 md:col-span-5">
+                <img src="../img/logo/aite.svg" alt="" id="ft">
+
+                <p class="font-bold text-xs text-white mt-10" id="ft">A little more about us.</p>
+                <h1 class="italic text-2xl text-white mt-3 md:w-3/4" id="ft">
+                    Our mission is for you to prosper through essential trainings and services.
+                </h1>
+            </div>
+            <div class="col-span-12 md:col-span-2 mt-10 md:mt-0">
+                <h1 class="font-semibold text-sm text-white" id="ft">SITEMAP</h1>
+                <ul class="text-sm pt-5 text-gray-400 leading-loose">
+                    <li id="ft">Home</li>
+                    <li id="ft">About</li>
+                    <li id="ft">Contact</li>
+                    <li id="ft">Services</li>
+                    <li id="ft">Courses</li>
+                    <li id="ft">News</li>
+                </ul>
+            </div>
+            <div class="col-span-12 md:col-span-2 mt-10 md:mt-0">
+                <h1 class="font-semibold text-white text-sm" id="ft">SUPPORT</h1>
+                <ul class="text-sm pt-5 text-gray-400 leading-loose">
+                    <li id="ft">Corporate Login</li>
+                    <li id="ft">Corporate Downloads</li>
+                    <li id="ft">Corporate Support</li>
+                    <li id="ft">Corporate Courses</li>
+                    <li id="ft">Technical Support</li>
+                </ul>
+            </div>
+            <div class="col-span-12 md:col-span-3 mt-10 md:mt-0">
+                <h1 class="font-semibold text-white text-sm">CONACT</h1>
+                <ul class="text-sm pt-5 text-gray-300">
+                    <li id="ft">125, ogba Rd<br/>off oba akran rd<br/>Ikeja lagos</li>
+                    <br/>
+                    <li id="ft">info@horznettechnologies.com.ng</li>
+                    <br/>
+                    <li id="ft">O8034543934, 07081768243</li>
+                    <br/>
+                    <li id="ft">Sunday - Friday, 7 AM - 6 PM</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="footerend text-xs text-gray-300">
+            <div class="2xl:container 2xl:mx-auto grid grid-cols-1 md:grid-cols-2 px-5 md:px-20 py-5">
+                <div class="col-span-1" id="ft">
+                    Copyright &copy; 2010 - <script>document.write(new Date().getFullYear());</script> Horznet Technologies Ltd.
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- <div class="modal modalopen flex justify-center items-center">
+        <div class="bg-gray-50 shadow lg:w-1/3 h-auto">
+            <h1 class="text-2xl font-semibold pb-5 bg-yellow-300 p-10 mb-5">
+                Notice for ICAN Students.
+            </h1>
+
+            <p class="text-sm leading-6 py-5 p-10 text-gray-800">
+                <span class="font-bold">Dear ICAN Students</span>,<br/><br/>
+                You are requested to send an email to <span class="font-bold">ittraining@aite.edu.np</span> with following information    
+            </p>
+
+            <ul class="leading-6 pl-10 font-bold text-sm text-gray-800">
+                <li>1. Full Name</li>
+                <li>2. Address</li>
+                <li>3. Mobile No</li>
+                <li>4. Email-Address</li>
+            </ul>
+
+            <p class=" p-10 text-sm">
+                If any queries, contact <b>9818999859</b>
+
+                
+            </p>
+
+            <p class="text-sm px-10">
+                <b>Note: After verification,  we will send you an email with links for your zoom meeting. After recieving that email you are to send a return email to confirm you have recieved it</b>
+            </p>
+
+            <p class="text-xs font-bold  p-10 text-gray-800">
+                Regards,<br/>
+                Academy for IT Engineering
+            </p>
+        </div>
+    </div> -->
+
+</body>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin=" anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/tilt.js/1.0.3/tilt.jquery.min.js" integrity="sha512-14AZ/DxUrlF26z6v7egDkpJHKyJRn/7ue2BgpWZ/fmqrqVzf4PrQnToy99sHmKwzKev/VZ1tjPxusuTV/n8CcQ==" crossorigin=" anonymous" referrerpolicy="no-referrer"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.7.0/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.7.0/ScrollTrigger.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.7.0/ScrollToPlugin.min.js"></script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha512-z4OUqw38qNLpn1libAN9BsoDx6nbNFio5lA6CuTp9NlK83b89hgyCVq+N5FdBJptINztxn1Z3SaKSKUS5UP60Q==" crossorigin=" anonymous" referrerpolicy="no-referrer"></script>
+<script type="text/javascript" src="//cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js"></script>
+<script src="../js/scroll.js"></script>
+
+<script>
+   
+</script>
+
+
+</html>

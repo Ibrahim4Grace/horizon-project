@@ -1,0 +1,441 @@
+
+<%- include (`../partials/userHtmlTag`); -%>
+<head>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <style>
+   
+        .flex { display: flex; }
+        .h-screen { height: 100vh; }
+        .w-full { width: 100%; }
+        .container { max-width: 1200px; margin: 0 auto; }
+        .grid { display: grid; }
+        .gap-6 { gap: 1.5rem; }
+        
+        @media (min-width: 768px) {
+            .md\:grid-cols-2 { grid-template-columns: repeat(2, 1fr); }
+        }
+        @media (min-width: 1024px) {
+            .lg\:grid-cols-3 { grid-template-columns: repeat(3, 1fr); }
+        }
+
+        .card {
+            background: white;
+            border-radius: 0.5rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: box-shadow 0.3s ease;
+        }
+        .card:hover {
+            box-shadow: 0 8px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        .bg-pink{
+            background: linear-gradient(90deg, #9A40EB, #F94B9A)!important;
+        }
+
+        .card-header {
+            background: linear-gradient(to right, #f97316, #f59e0b) !important;
+            border-top-left-radius: 0.5rem;
+            border-top-right-radius: 0.5rem;
+            padding: 1rem;
+            color: white !important;
+        }
+
+        .icon {
+            width: 24px;
+            height: 24px;
+            color: #ffffff !important;
+        }
+        .small-icon {
+            width: 16px;
+            height: 16px;
+            margin-right: 0.5rem;
+            color: #666;
+        }
+
+
+        .purchase-button {
+            width: 100%;
+            margin-top: 1rem;
+            padding: 0.75rem 1rem;
+            /* background: linear-gradient(to right, #f97316, #f59e0b) !important; */
+            background: linear-gradient(90deg, rgb(147, 51, 234), rgb(249, 75, 154)) !important;
+
+            color: white !important;
+            border: none;
+            border-radius: 0.375rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 1rem;
+        }
+        .purchase-button:hover {
+            background: linear-gradient(90deg, rgb(154, 64, 235), rgb(249, 75, 154))!important;
+            transform: translateY(-1px);
+        }
+
+        .price {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: rgb(55 65 81) !important;
+            text-align: center;
+            margin: 1rem 0;
+        }
+
+        .card-content {
+            padding: 1.5rem;
+        }
+        .info-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.75rem;
+        }
+        .duration {
+            font-weight: 600;
+            color: white !important;
+            font-size: 1.125rem;
+        }
+
+        .bg-gradient {
+            background: linear-gradient(90deg, #9A40EB, #F94B9A)!important;
+        }
+    </style>
+</head>
+<body>
+  <div
+    class="flex h-screen bg-gray-50 dark:bg-gray-900"
+    :class="{ 'overflow-hidden': isSideMenuOpen }"
+  >
+
+    <%- include (`../partials/userSidebar`); -%>
+
+    <div class="flex flex-col flex-1 w-full">
+      <%- include (`../partials/userHeader`); -%>
+  
+      <main class="h-full overflow-y-auto">
+        <div class="container px-6 mx-auto grid">
+
+               <div class="w-full p-4">
+ 
+                    <h2
+                      class="my-6 text-2xl font-semibold text-gray-700 dark:text-gray-200"
+                    >
+                         Purchase Access Pins
+                    </h2>
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="pinCardsContainer">
+                          <!-- Cards will be dynamically inserted here -->
+                    </div>
+                </div>
+    
+
+      
+               <!-- Pin Card Template -->
+<template id="pinCardTemplate">
+    <div class="card">
+        <div class="card-header bg-gradient">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+                <span class="duration"></span>
+                <i class="fas fa-credit-card icon"></i>
+            </div>
+        </div>
+        <div class="card-content">
+            <div class="info-row">
+                <span style="display: flex; align-items: center;">
+                    <i class="fas fa-tag small-icon"></i>
+                    Pins
+                </span>
+                <span class="pins-count" style="font-weight: 600;"></span>
+            </div>
+            <div class="info-row">
+                <span style="display: flex; align-items: center;">
+                    <i class="fas fa-clock small-icon"></i>
+                    Validity
+                </span>
+                <span class="validity" style="font-weight: 600;"></span>
+            </div>
+            <div class="price"></div>
+            <button class="purchase-button">Purchase Now</button>
+        </div>
+    </div>
+</template>
+
+<!-- Course Card Template -->
+<template id="courseCardTemplate">
+    <div class="card">
+        <div class="card-header bg-gradient">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+                <span class="duration"></span>
+                <i class="fas fa-credit-card icon"></i>
+            </div>
+        </div>
+        <div class="card-content">
+            <div class="info-row">
+                <span style="display: flex; align-items: center;">
+                    <i class="fas fa-graduation-cap small-icon"></i>
+                    Course
+                </span>
+                <span class="course-name" style="font-weight: 600;"></span>
+            </div>
+            <div class="info-row">
+                <span style="display: flex; align-items: center;">
+                    <i class="fas fa-clock small-icon"></i>
+                    Duration
+                </span>
+                <span class="validity" style="font-weight: 600;"></span>
+            </div>
+            <div class="price"></div>
+            <button class="purchase-button">Purchase Now</button>
+        </div>
+    </div>
+</template>
+            <!-- <template id="cardTemplate">
+                <div class="card">
+                    <div class="card-header bg-gradient">
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <span class="duration"></span>
+                            <i class="fas fa-credit-card icon"></i>
+                        </div>
+                    </div>
+                    <div class="card-content">
+                        <div class="info-row">
+                            <span style="display: flex; align-items: center;">
+                                <i class="fas fa-tag small-icon"></i>
+                                      Pins
+                            </span>
+                            <span class="pins-count" style="font-weight: 600;"></span>
+                        </div>
+                        
+                        <div class="info-row">
+                            <span style="display: flex; align-items: center;">
+                                <i class="fas fa-clock small-icon"></i>
+                                Validity
+                            </span>
+                            <span class="validity" style="font-weight: 600;"></span>
+                        </div>
+                        <div class="price"></div>
+                              <button class="purchase-button">Purchase Now</button>
+                    </div>
+                </div>
+            </template> -->
+        </div>
+      </main>
+    </div>
+
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+    const pinOptions = [
+        { 
+            type: 'pin',
+            duration: 'Lifetime Access', 
+            price: '#35,000.00', 
+            pins: "Purchase" 
+        }
+    ];
+
+    const courseOptions = [
+        {
+            type: 'course',
+            duration: 'Lifetime Access', 
+            price: '#35,000.00', 
+            courseName: 'Web Development'
+        },
+        {
+            type: 'course',
+            duration: 'Lifetime Access', 
+            price: '#35,000.00', 
+            courseName: 'Cyber security'
+        },
+
+        {
+            type: 'course',
+            duration: 'Lifetime Access', 
+            price: '#35,000.00', 
+            courseName: 'Data networking'
+        },
+        {
+            type: 'course',
+            duration: 'Lifetime Access', 
+            price: '#35,000.00', 
+            courseName: 'Coding'
+        },
+        {
+            type: 'course',
+            duration: 'Lifetime Access', 
+            price: '#35,000.00', 
+            courseName: 'Enterpise network'
+        }
+    ];
+
+    const container = document.getElementById('pinCardsContainer');
+    const pinTemplate = document.getElementById('pinCardTemplate');
+    const courseTemplate = document.getElementById('courseCardTemplate');
+
+    // Add pin card first
+    pinOptions.forEach(option => {
+        const card = pinTemplate.content.cloneNode(true);
+        
+        card.querySelector('.duration').textContent = option.duration;
+        card.querySelector('.pins-count').textContent = option.pins;
+        card.querySelector('.validity').textContent = option.duration;
+        card.querySelector('.price').textContent = option.price;
+
+        const header = card.querySelector('.card-header');
+        header.classList.add('bg-gradient-pin'); // Different gradient for pin cards
+
+        const button = card.querySelector('button');
+        button.addEventListener('click', () => handlePurchase(option));
+
+        container.appendChild(card);
+    });
+
+    // Then add course cards
+    courseOptions.forEach(option => {
+        const card = courseTemplate.content.cloneNode(true);
+        
+        card.querySelector('.duration').textContent = option.duration;
+        card.querySelector('.course-name').textContent = option.courseName;
+        card.querySelector('.validity').textContent = option.duration;
+        card.querySelector('.price').textContent = option.price;
+
+        const header = card.querySelector('.card-header');
+        header.classList.add('bg-gradient-course'); // Different gradient for course cards
+
+        const button = card.querySelector('button');
+        button.addEventListener('click', () => handlePurchase(option));
+
+        container.appendChild(card);
+    });
+
+    // Initialize icons after DOM content is loaded
+    lucide.createIcons();
+});
+
+function handlePurchase(option) {
+    if (option.type === 'pin') {
+        console.log(`Purchasing ${option.pins} pins for ${option.price}`);
+        // Handle pin purchase
+        initializePinPurchase(option);
+    } else {
+        console.log(`Purchasing course: ${option.courseName} for ${option.price}`);
+        // Handle course purchase
+        initializeCoursePurchase(option);
+    }
+}
+
+async function initializePinPurchase(option) {
+    try {
+        const response = await fetch('/api/subscription/initialize', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                planId: option.id,
+                type: 'pin'
+            })
+        });
+        const data = await response.json();
+        if (data.authorization_url) {
+            window.location.href = data.authorization_url;
+        }
+    } catch (error) {
+        console.error('Error initializing pin purchase:', error);
+    }
+}
+
+async function initializeCoursePurchase(option) {
+    try {
+        const response = await fetch('/api/subscription/initialize', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                planId: option.id,
+                type: 'course'
+            })
+        });
+        const data = await response.json();
+        if (data.authorization_url) {
+            window.location.href = data.authorization_url;
+        }
+    } catch (error) {
+        console.error('Error initializing course purchase:', error);
+    }
+}
+
+// Handle responsive layout
+function handleResize() {
+    const container = document.getElementById('pinCardsContainer');
+    if (window.innerWidth < 768) {
+        container.style.gridTemplateColumns = '1fr';
+    } else if (window.innerWidth < 1024) {
+        container.style.gridTemplateColumns = 'repeat(2, 1fr)';
+    } else {
+        container.style.gridTemplateColumns = 'repeat(3, 1fr)';
+    }
+}
+
+window.addEventListener('resize', handleResize);
+handleResize();
+  </script>
+<!-- 
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const pinOptions = [
+            { duration: 'Lifetime Access', price: '#3500.00', pins: 'Purchase' },
+            { duration: '60 Days', price: '$34.99', course: 10 },
+            { duration: '90 Days', price: '$49.99', course: 15 },
+            { duration: '90 Days', price: '$49.99', course: 15 },
+            { duration: '90 Days', price: '$49.99', course: 15 }
+        ];
+
+        const container = document.getElementById('pinCardsContainer');
+        const template = document.getElementById('cardTemplate');
+
+        pinOptions.forEach(option => {
+            const card = template.content.cloneNode(true);
+            
+            card.querySelector('.duration').textContent = option.duration;
+            card.querySelector('.pins-count').textContent = option.pins;
+            
+            card.querySelector('.validity').textContent = option.duration;
+            card.querySelector('.price').textContent = option.price;
+
+            // Ensure the header has the gradient class
+            const header = card.querySelector('.card-header');
+            header.classList.add('bg-gradient');
+
+            const button = card.querySelector('button');
+            button.addEventListener('click', () => handlePurchase(option));
+
+            container.appendChild(card);
+        });
+
+        // Initialize icons after DOM content is loaded
+        lucide.createIcons();
+
+        function handlePurchase(option) {
+            console.log(`Purchasing ${option.pins} pins for ${option.price}`);
+        }
+    });
+
+    function handleResize() {
+        const container = document.getElementById('pinCardsContainer');
+        if (window.innerWidth < 768) {
+            container.style.gridTemplateColumns = '1fr';
+        } else if (window.innerWidth < 1024) {
+            container.style.gridTemplateColumns = 'repeat(2, 1fr)';
+        } else {
+            container.style.gridTemplateColumns = 'repeat(3, 1fr)';
+        }
+    }
+
+    window.addEventListener('resize', handleResize);
+    handleResize();
+</script> -->
+   
+</body>
+</html>
