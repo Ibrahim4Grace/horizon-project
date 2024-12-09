@@ -1,6 +1,5 @@
 import nodemailer from 'nodemailer';
 import { config } from '../configs/index.js';
-import { log } from '../utils/index.js';
 import { ServerError } from '../middlewares/index.js';
 
 export const sendMail = async (emailcontent) => {
@@ -17,7 +16,7 @@ export const sendMail = async (emailcontent) => {
     await transporter.sendMail(emailcontent);
     return 'Email sent successfully.';
   } catch (error) {
-    log.error(error);
+    console.error(error);
     throw new ServerError(error);
   }
 };

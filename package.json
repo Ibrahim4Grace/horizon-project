@@ -17,7 +17,6 @@
     "cloudinary": "^2.5.1",
     "cookie-parser": "^1.4.7",
     "cors": "^2.8.5",
-    "dayjs": "^1.11.13",
     "dotenv": "^16.4.7",
     "ejs": "^3.1.10",
     "express": "^4.21.1",
@@ -27,8 +26,6 @@
     "multer": "^1.4.5-lts.1",
     "nodemailer": "^6.9.16",
     "otp-generator": "^4.0.1",
-    "pino": "^9.5.0",
-    "pino-pretty": "^13.0.0",
     "zod": "^3.23.8"
   }
 }
