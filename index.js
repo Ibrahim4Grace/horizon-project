@@ -31,14 +31,9 @@ app.use(router);
 
 app.use(notFoundMIiddleware);
 app.use(errorHandler);
-app.get('/', (req, res) => {
-  res.render('index');
-});
 
 // Create an HTTP server instance
 const server = http.createServer(app);
 
 // Start the server
 startServer(server);
-
-// keepAlive();
