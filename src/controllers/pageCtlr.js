@@ -6,4 +6,4 @@ export const contact = (req, res) => {
   res.render('contact');
 };
 
-// export const contactPage = (req, res) => {};
+export const contactPage = (req, res) => {};

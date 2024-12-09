@@ -6,6 +6,6 @@ const pageRoute = Router();
 
 pageRoute.get('/', pageCtlr.indexPage);
 pageRoute.get('/contact', pageCtlr.contact);
-// pageRoute.Post('/contact', pageCtlr.contactPage);
+pageRoute.Post('/contact', pageCtlr.contactPage);
 
 export default pageRoute;

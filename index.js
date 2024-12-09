@@ -14,7 +14,6 @@ const app = express();
 
 app.use(cors(corsOptions));
 
-// Set no-cache headers middleware
 app.use((req, res, next) => {
   res.header('Cache-Control', 'no-store, no-cache, must-revalidate, private');
   res.header('Pragma', 'no-cache');
@@ -32,8 +31,6 @@ app.use(router);
 app.use(notFoundMIiddleware);
 app.use(errorHandler);
 
-// Create an HTTP server instance
 const server = http.createServer(app);
 
-// Start the server
 startServer(server);
