@@ -16,13 +16,6 @@
 
 
 </head>
-<style>
-    @import url('https://fonts.googleapis.com/css2?family=Raleway:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
-
-* {
-font-family: 'Raleway', sans-serif;
-}
-</style>
 
 <body>
     <div class="preloader flex flex-col justify-center items-center">
@@ -40,7 +33,7 @@ font-family: 'Raleway', sans-serif;
         </div>
     </div>
 
-    <nav class="px-10 py-5 w-screen">
+    <!-- <nav class="px-10 py-5 w-screen">
         <div class="grid grid-cols-3">
             <div class="col-span-1 py-1">
                 <img class="h-8" src="../img/logo/aite.svg" alt="" />
@@ -62,15 +55,46 @@ font-family: 'Raleway', sans-serif;
                 </ul>
             </div>
         </div>
-    </nav>
+    </nav> -->
 
+
+       <!-- Replace your current nav with this -->
+       <nav class="px-10 py-5 w-screen">
+        <div class="grid grid-cols-3 items-center">
+            <div class="col-span-1 py-1">
+                <img class="h-8" src="../img/logo/aite.svg" alt="" />
+            </div>
+            
+            <!-- Hamburger Menu -->
+            <button class="hamburger ml-auto md:hidden col-span-2" onclick="toggleMenu()">
+                <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
+                </svg>
+            </button>
+            
+            <!-- Navigation Links -->
+            <div class="nav-links col-span-2 md:flex justify-end">
+                <ul class="text-xs">
+                    <li><a href="/">Home</a></li>
+                    <li><a onclick="scrollto('about')" href="#">About</a></li>
+                    <li><a onclick="scrollto('offer')" href="#">Services</a></li>
+                    <li><a href="/contact">Contact</a></li>
+                    <li>
+                        <a href="/auth/user/login" class="xx block bg-yellow-400 py-3 px-10" style="background:#ffa724;">
+                            Sign In
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
 
 
     <header class=" w-screen">
         <div class="2xl:container 2xl:mx-auto px-10 md:px-20 header_main">
             <p class="text-gray-400" id="hd">Horznet Technologies Ltd.</p>
             <h1 class="text-4xl md:text-6xl text-white w-4/5 pt-5 pb-10" id="hd">
-                Horznet Technologis for individuals and businesses.
+                Horznet Technologies for individuals and businesses.
             </h1>
             <button id="hd" class="xx text-xs text-white px-5 py-3" style=" background:#ffa724;">
                 <a onclick="scrollto('offer')" href="#">Explore our Services</a>
@@ -165,9 +189,9 @@ environment and up-to date contents.
                     Your syndicate for IT trainings. We hire qualified and real world professionals to give you all the resources you need to excel.
                 </h1>
                 <p class="py-5 md:py-20 text-gray-50 font-light text-xs leading-5" id="ab">
-                    Horznet Technologis is an Institute established on 2010 for the sole purpose of providing quality computer training with affordable pricing. With over 200 choices for anyone to select, we have a wide range of course selection. While our trainers also customize the course content as per required to your requirement. "A course made just for you" as our Head Trainer James Fadairo Muyiwa.
+                    Horznet Technologies is an Institute established on 2010 for the sole purpose of providing quality computer training with affordable pricing. With over 200 choices for anyone to select, we have a wide range of course selection. While our trainers also customize the course content as per required to your requirement. "A course made just for you" as our Head Trainer James Fadairo Muyiwa.
                     <br/><br/>
-                    Horznet Technologis is a pioneer in computer training. We have well equipped facilities with all the necessary high end computers and devices to give you the best experience. Our trainers are highly qualified and experienced in both teaching and working in their field.
+                    Horznet Technologies is a pioneer in computer training. We have well equipped facilities with all the necessary high end computers and devices to give you the best experience. Our trainers are highly qualified and experienced in both teaching and working in their field.
                 </p>
 
                
@@ -437,7 +461,7 @@ your business profile.
     <section class="journey">
         <div class="2xl:container 2xl:mx-auto px-10 md:px-20 bg-cover grid grid-cols-1 md:grid-cols-2 gap-20 main" style="background-image: url( '../img/bggg.png')">
             <div class="col-span-1">
-                <p class="text-gray-100 mb-10" id="jo">Subscribe to our Newsletter</p>
+                <!-- <p class="text-gray-100 mb-10" id="jo">Subscribe to our Newsletter</p> -->
                 <h1 class="text-3xl md:text-4xl leading-snug font-bold text-white" id="jo">
                     " The more that you read, the more things you will know. The more that you learn, the more places you’ll go. "
                 </h1>
@@ -446,10 +470,10 @@ your business profile.
 
                 </p>
 
-                <div class="grid grid-cols-12" id="jo">
+                <!-- <div class="grid grid-cols-12" id="jo">
                     <div class="col-span-9"><input class="w-full py-3 px-5 text-sm" type="text" placeholder="Email Address . . ."></div>
                     <div class="col-span-3"><button class="xx bg-yellow-500 w-full py-3 text-sm text-white font-semibold">Subscribe</button></div>
-                </div>
+                </div> -->
             </div>
             <div class="col-span-1" id="jo">
                 <img src="../img/Larry__Communication 1.png" alt="">
@@ -549,56 +573,11 @@ your business profile.
         </div>
     </footer>
 
-    <!-- <div class="modal modalopen flex justify-center items-center">
-        <div class="bg-gray-50 shadow lg:w-1/3 h-auto">
-            <h1 class="text-2xl font-semibold pb-5 bg-yellow-300 p-10 mb-5">
-                Notice for ICAN Students.
-            </h1>
-
-            <p class="text-sm leading-6 py-5 p-10 text-gray-800">
-                <span class="font-bold">Dear ICAN Students</span>,<br/><br/>
-                You are requested to send an email to <span class="font-bold">ittraining@aite.edu.np</span> with following information    
-            </p>
-
-            <ul class="leading-6 pl-10 font-bold text-sm text-gray-800">
-                <li>1. Full Name</li>
-                <li>2. Address</li>
-                <li>3. Mobile No</li>
-                <li>4. Email-Address</li>
-            </ul>
-
-            <p class=" p-10 text-sm">
-                If any queries, contact <b>9818999859</b>
-
-                
-            </p>
-
-            <p class="text-sm px-10">
-                <b>Note: After verification,  we will send you an email with links for your zoom meeting. After recieving that email you are to send a return email to confirm you have recieved it</b>
-            </p>
-
-            <p class="text-xs font-bold  p-10 text-gray-800">
-                Regards,<br/>
-                Academy for IT Engineering
-            </p>
-        </div>
-    </div> -->
-
+  
 </body>
 
-<script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin=" anonymous"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/tilt.js/1.0.3/tilt.jquery.min.js" integrity="sha512-14AZ/DxUrlF26z6v7egDkpJHKyJRn/7ue2BgpWZ/fmqrqVzf4PrQnToy99sHmKwzKev/VZ1tjPxusuTV/n8CcQ==" crossorigin=" anonymous" referrerpolicy="no-referrer"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.7.0/gsap.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.7.0/ScrollTrigger.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.7.0/ScrollToPlugin.min.js"></script>
+<%- include (`partials/footer`); -%>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha512-z4OUqw38qNLpn1libAN9BsoDx6nbNFio5lA6CuTp9NlK83b89hgyCVq+N5FdBJptINztxn1Z3SaKSKUS5UP60Q==" crossorigin=" anonymous" referrerpolicy="no-referrer"></script>
-<script type="text/javascript" src="//cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js"></script>
-<script src="../js/scroll.js"></script>
-
-<script>
-   
-</script>
 
 
 </html>
