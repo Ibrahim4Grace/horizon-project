@@ -3,6 +3,7 @@ import session from 'express-session';
 import cookieParser from 'cookie-parser';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import ejs from 'ejs';
 import dotenv from 'dotenv';
 
 dotenv.config();
