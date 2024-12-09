@@ -1,0 +1,337 @@
+
+<%- include (`../partials/userHtmlTag`); -%>
+<style>
+    :root {
+      --primary-color: #2962ff;
+      --secondary-color: #72a2f7;
+      --background-color: #a2cdff;
+      --text-color: #333;
+      --text-secondary: #666;
+      --border-color: #eee;
+      --white: #fff;
+      --card-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      --input-background: #fafafa;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    .container {
+      width: 100%;
+      max-width: 1200px;
+      border-radius: 20px;
+      box-shadow: var(--card-shadow);
+      overflow: hidden;
+    }
+
+    .checkout-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 2rem;
+      padding: 2rem;
+    }
+
+    @media (min-width: 768px) {
+      .checkout-grid {
+        grid-template-columns: 1.5fr 1fr;
+      }
+    }
+
+    .form-section {
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+
+    .header {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin-bottom: 2rem;
+    }
+
+    .header .logo {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--primary-color);
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .form-group label {
+      font-weight: 600;
+      font-size: 0.9rem;
+    }
+
+    .form-group .hint {
+      font-size: 0.8rem;
+      color: var(--text-secondary);
+    }
+
+    .input-wrapper {
+      position: relative;
+      display: flex;
+      align-items: center;
+    }
+
+    .input-field {
+      width: 100%;
+      padding: 0.8rem 1rem;
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      font-size: 1rem;
+      background: var(--input-background);
+      transition: all 0.3s ease;
+    }
+
+    .input-field:focus {
+      outline: none;
+      border-color: var(--primary-color);
+      background: var(--white);
+    }
+
+    .input-icon {
+      position: absolute;
+      right: 1rem;
+      color: var(--text-secondary);
+    }
+
+    .card-preview {
+      background: var(--secondary-color);
+      padding: 1.5rem;
+      border-radius: 12px;
+      color: var(--white);
+      margin-bottom: 2rem;
+    }
+
+    .order-summary {
+      background: var(--input-background);
+      padding: 1.5rem;
+      border-radius: 12px;
+    }
+
+    .summary-item {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 1rem;
+      font-size: 0.9rem;
+    }
+
+    .total {
+      margin-top: 1.5rem;
+      padding-top: 1.5rem;
+      border-top: 2px dashed var(--border-color);
+    }
+
+    .total-amount {
+      font-size: 1.5rem;
+      font-weight: 700;
+    }
+
+    .submit-button {
+      width: 100%;
+      padding: 1rem;
+      background: var(--primary-color);
+      color: var(--white);
+      border: none;
+      border-radius: 8px;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+
+    .submit-button:hover {
+      background: #1e4bd8;
+    }
+
+    .expiry-date {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+    }
+
+    @media (max-width: 480px) {
+      .checkout-grid {
+        padding: 1rem;
+      }
+      
+      .header {
+        margin-bottom: 1rem;
+      }
+      
+      .form-group {
+        gap: 0.25rem;
+      }
+    }
+  </style>
+<body>
+  <div
+    class="flex h-screen bg-gray-50 dark:bg-gray-900"
+    :class="{ 'overflow-hidden': isSideMenuOpen }"
+  >
+
+    <%- include (`../partials/userSidebar`); -%>
+
+    <div class="flex flex-col flex-1 w-full">
+      <%- include (`../partials/userHeader`); -%>
+  
+      <main class="h-full overflow-y-auto">
+        <div class="container px-6 mx-auto grid">
+          <h2
+            class="my-6 text-2xl font-semibold text-gray-700 dark:text-gray-200"
+          >
+          Paystack Pay
+          </h2>
+          
+          
+            <div class="container">
+                <div class="checkout-grid">
+                  <div class="form-section">
+            
+                  <form id="paymentForm" data-url="/payment/charge-card" method="POST">
+                    <% if (pin) { %>
+                      <input type="hidden" name="pinId" value="<%= pin._id %>">
+                      <input type="hidden" name="amount" value="<%= pin.price %>">
+                    <% } else if (course) { %>
+                      <input type="hidden" name="courseId" value="<%= course._id %>">
+                      <input type="hidden" name="amount" value="<%= course.price %>">
+                    <% } %>
+                  
+                    <div class="form-group">
+                      <label class="text-gray-700 dark:text-gray-200">Card Number</label>
+                      <span class="hint">Enter 16-digit card number</span>
+                      <div class="input-wrapper">
+                        <input type="text" name="cardNumber" class="input-field" placeholder="0000 0000 0000 0000" maxlength="19" required />
+                        <svg class="input-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+                      </div>
+                    </div>
+                  
+                    <div class="expiry-date">
+                      <div class="form-group">
+                        <label class="text-gray-700 dark:text-gray-200">Expiry Month</label>
+                        <input type="text" name="expiryMonth" class="input-field" placeholder="MM" maxlength="2" required />
+                      </div>
+                      <div class="form-group">
+                        <label class="text-gray-700 dark:text-gray-200">Expiry Year</label>
+                        <input type="text" name="expiryYear" class="input-field" placeholder="YY" maxlength="2" required />
+                      </div>
+                    </div>
+                  
+                    <div class="form-group">
+                      <label class="text-gray-700 dark:text-gray-200">CVV</label>
+                      <span class="hint">Enter 3-digit number from back of card</span>
+                      <div class="input-wrapper">
+                        <input type="password" name="cvv" class="input-field" placeholder="000" maxlength="4" required />
+                        <svg class="input-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+                      </div>
+                    </div>
+                  
+                    <button type="submit" class="submit-button">Pay Now</button>
+                  </form>
+                  </div>
+            
+                  <div class="summary-section">
+                    <div class="order-summary">
+                      <!-- Product Details -->
+                      <% if (pin) { %>
+                        <div class="summary-item">
+                          <span>Product</span>
+                          <strong><%= pin.name %></strong>
+                        </div>
+                        <div class="total">
+                          <div class="summary-item">
+                            <span>You have to Pay</span>
+                            <div class="total-amount">#<%= pin.price %>.00</div>
+                          </div>
+                        </div>
+                      <% } else if (course) { %>
+                        <div class="summary-item">
+                          <span>Course</span>
+                          <strong><%= course.name %></strong>
+                        </div>
+                        <div class="total">
+                          <div class="summary-item">
+                            <span>You have to Pay</span>
+                            <div class="total-amount">#<%= course.price %>.00</div>
+                          </div>
+                        </div>
+                      <% } else { %>
+                        <p>No product or course selected for payment.</p>
+                      <% } %>
+                    </div>
+                  </div>
+                  
+                </div>
+              </div>
+
+         <script>
+            /* COPY INPUT VALUES TO CARD MOCKUP */
+const bounds = document.querySelectorAll("[data-bound]");
+
+for (let i = 0; i < bounds.length; i++) {
+  const targetId = bounds[i].getAttribute("data-bound");
+  const defValue = bounds[i].getAttribute("data-def");
+  const targetEl = document.getElementById(targetId);
+  bounds[i].addEventListener(
+    "blur",
+    () => (targetEl.innerText = bounds[i].value || defValue)
+  );
+}
+
+/* TOGGLE CVC DISPLAY MODE */
+const cvc_toggler = document.getElementById("cvc_toggler");
+
+cvc_toggler.addEventListener("click", () => {
+  const target = cvc_toggler.getAttribute("data-target");
+  const el = document.getElementById(target);
+  el.setAttribute("type", el.type === "text" ? "password" : "text");
+});
+
+function onlyNumberKey(evt) {
+  // Only ASCII character in that range allowed
+  var ASCIICode = evt.which ? evt.which : evt.keyCode;
+  if (ASCIICode > 31 && (ASCIICode < 48 || ASCIICode > 57)) return false;
+  return true;
+}
+
+$(function () {
+  $("#cardNumber").on("keyup", function (e) {
+    var val = $(this).val();
+    var newval = "";
+    val = val.replace(/\s/g, "");
+    for (var i = 0; i < val.length; i++) {
+      if (i % 4 == 0 && i > 0) newval = newval.concat(" ");
+      newval = newval.concat(val[i]);
+    }
+    $(this).val(newval);
+  });
+
+  $(".year-own").datepicker({
+    minViewMode: 2,
+    format: "yy"
+  });
+
+  $(".month-own").datepicker({
+    format: "MM",
+    minViewMode: "months",
+    maxViewMode: "months",
+    startView: "months"
+  });
+});
+
+         </script>
+
+        </div>
+      </main>
+    </div>
+  </div>
+  <script src="../../mail/payment.js"></script>
+</body>
+</html>

@@ -1,6 +1,6 @@
 import mongoose from 'mongoose';
 
-const courseSchema = new mongoose.Schema(
+const pinSchema = new mongoose.Schema(
   {
     name: {
       type: String,
@@ -23,6 +23,6 @@ const courseSchema = new mongoose.Schema(
   }
 );
 
-const Course = mongoose.model('Course', courseSchema);
+const Pin = mongoose.model('Pin', pinSchema);
 
-export { Course };
+export { Pin };

@@ -18,7 +18,7 @@ const config = {
   sessionSecret: process.env.SESSION_SECRET,
 
   jwtSecret: process.env.JWT_SECRET,
-  jwtExpiry: process.env.JWT_EXPIRE || '15m',
+  jwtExpiry: process.env.JWT_EXPIRE || '3m',
 
   accessToken: process.env.ACCESS_TOKEN,
   refreshToken: process.env.REFRESH_TOKEN,

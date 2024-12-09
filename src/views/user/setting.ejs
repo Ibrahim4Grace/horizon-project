@@ -18,11 +18,11 @@
           >
             Profile Settings
           </h2>
-
-
+        
        <div
          class="px-4 py-3 mb-8 bg-white rounded-lg shadow-md dark:bg-gray-800"
        >
+       <form id="settingForm" data-url="/user/setting" method="post">
          <!-- Helper text -->
          <label class="block mt-4 text-sm">
           <span class="text-gray-700 dark:text-gray-400">
@@ -30,7 +30,7 @@
           </span>
           <input
             class="block w-full mt-1 text-sm dark:text-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray form-input"
-            placeholder="Jane Doe" name="full_name" type="text"
+            placeholder="Your name" name="full_name" type="text" value="<%= user.full_name %>"
           />
           <div id="full_nameError" class="text-danger"></div>
         </label>
@@ -42,7 +42,7 @@
             </span>
             <input
               class="block w-full mt-1 text-sm dark:text-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray form-input"
-              placeholder="date of birth" name="dob" type="date"
+              placeholder="date of birth" name="dob" type="date" value="<%= user.dob %>"
             />
             <div id="dobError" class="text-danger"></div>
           </label>
@@ -55,7 +55,7 @@
            </span>
            <input
              class="block w-full mt-1 text-sm dark:text-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray form-input"
-             placeholder="email address" type="email" name="email"
+             placeholder="email address" type="email" name="email" value="<%= user.email %>"
            />
            <div id="emailError" class="text-danger"></div>
          </label>
@@ -67,7 +67,7 @@
             </span>
             <input
               class="block w-full mt-1 text-sm dark:text-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray form-input"
-              placeholder="Phone number" name="phone_number" type="text"
+              placeholder="Phone number" name="phone_number" type="text" value="<%= user.phone_number %>"
             />
             <div id="phone_numberError" class="text-danger"></div>
           </label>
@@ -79,12 +79,10 @@
           </span>
           <input
             class="block w-full mt-1 text-sm dark:text-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray form-input"
-            placeholder="Home address" name="home_address" type="text"
+            placeholder="Home address" name="home_address" type="text" value="<%= user.home_address %>"
           />
           <div id="home_addressError" class="text-danger"></div>
         </label>
-
-
          <!-- Helper text -->
          <label class="block mt-4 text-sm">
           <span class="text-gray-700 dark:text-gray-400">
@@ -92,9 +90,9 @@
           </span>
           <input
             class="block w-full mt-1 text-sm dark:text-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray form-input"
-            placeholder="Jane Doe" name="current_password" type="password"
-          />
-          <div id="passwordError" class="text-danger"></div>
+            placeholder="password" name="current_password" type="password"
+            />
+            <div id="current_passwordError" class="text-danger"></div>
         </label>
 
          <!-- Helper text -->
@@ -104,19 +102,20 @@
           </span>
           <input
             class="block w-full mt-1 text-sm dark:text-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray form-input"
-            placeholder="password" name="password" type="password"
+            placeholder="password" name="new_password" type="password" 
             />
-            <div id="passwordError" class="text-danger"></div>
+            <div id="new_passwordError" class="text-danger"></div>
         </label>
-
+        <hr class="my-8" />
         <div>
           <button
-            class="px-5 py-3 font-medium leading-5 text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-lg active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple"
+            class="px-5 py-3 font-medium leading-5 text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-lg active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple"  type="submit" id="submitButton"
           >
-            Large button
+            Update data
           </button>
+          <div id="generalError" class="text-danger"></div>
         </div>
-
+      </form>
        </div>
 
 
@@ -125,7 +124,7 @@
         </div>
       </main>
     </div>
-
+    <script src="../../mail/setting.js"></script>
   </div>
 </body>
 </html>

@@ -3,32 +3,34 @@ import { config } from '../configs/index.js';
 import mongoose from 'mongoose';
 import { User, Admin } from '../models/index.js';
 import { asyncHandler } from '../utils/asyncHandler.js';
-import {
-  Unauthorized,
-  ResourceNotFound,
-  Forbidden,
-} from '../middlewares/index.js';
+import { ResourceNotFound, Forbidden } from '../middlewares/index.js';
 
 export const authMiddleware = asyncHandler(async (req, res, next) => {
   const accessToken =
     req.cookies.accessToken || req.headers.authorization?.split(' ')[1];
 
+  // Determine user type from request path
+  const isAdminRoute =
+    req.path.startsWith('/admin') || req.path.includes('/auth/admin');
+  const loginRedirectUrl = isAdminRoute
+    ? '/auth/admin/login'
+    : '/auth/user/login';
+
   if (!accessToken) {
-    throw new Unauthorized('Sign in to access this pagea');
+    return res.redirect(loginRedirectUrl);
   }
+
   try {
     const decodedAccessToken = jwt.verify(accessToken, config.accessToken);
 
     if (!mongoose.Types.ObjectId.isValid(decodedAccessToken.id)) {
-      throw new Unauthorized('Invalid user ID format');
+      return res.redirect(loginRedirectUrl);
     }
 
     req.user = decodedAccessToken;
     next();
   } catch (err) {
-    return next(
-      new Unauthorized('Invalid or expired token. Please sign in again.')
-    );
+    return res.redirect(loginRedirectUrl);
   }
 });
 

@@ -74,14 +74,23 @@ export const passwordChangeNotification = (user) => ({
   text: `Hello User,\n\nThis is a confirmation that the password for your account has just been changed. If you did not request this change, please contact our support team immediately.\n\nBest regards,\nThe Horznet Team`,
 });
 
-export const updatePassword = (user) => ({
+export const updateProfile = (user, updatedUser) => ({
   from: config.nodemailerEmail,
   to: user.email,
-  subject: `Password Update Confirmation`,
+  subject: `Your Information Has Been Modified!`,
   html: `
-    <h2>Welcome to Horznet!</h2>
-    <p>We wanted to inform you that your password has been successfully updated.</p>
-    <p>If you did not make this change or if you have any concerns regarding your account security, please contact us immediately.</p>
+     <p>Dear  ${user.full_name},</p>
+    <p>This message is to inform you that there has been an update to your information in our database.</p>
+
+    <p>Your new information:</p>
+    <ul>
+        <li>Full Name: ${updatedUser.full_name}</li>
+        <li>Email Address: ${updatedUser.email}</li>
+        <li>Phone Number: ${updatedUser.phone_number}</li>
+        <li>Date of Birth: ${updatedUser.dob}</li>
+        <li>Home Address: ${updatedUser.home_address}</li>
+    </ul>
+
     <p>Thank you for keeping your account secure!</p>
     <p>Best regards,<br>The Horznet Team</p>
   `,

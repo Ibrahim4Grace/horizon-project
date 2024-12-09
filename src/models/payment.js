@@ -1,6 +1,6 @@
 import mongoose from 'mongoose';
 
-const subscriptionSchema = new mongoose.Schema(
+const paymentSchema = new mongoose.Schema(
   {
     user: {
       type: mongoose.Schema.Types.ObjectId,
@@ -11,6 +11,10 @@ const subscriptionSchema = new mongoose.Schema(
       type: String,
       enum: ['active', 'inactive', 'expired'],
       default: 'inactive',
+    },
+    itemId: {
+      type: mongoose.Schema.Types.ObjectId,
+      required: true,
     },
     paymentReference: String,
     amount: {
@@ -37,6 +41,19 @@ const subscriptionSchema = new mongoose.Schema(
       paidAt: Date,
       transactionDate: Date,
     },
+    // Add fields for card authorization
+    authorization: {
+      authorization_code: { type: String, trim: true },
+      card_type: { type: String, trim: true },
+      last4: { type: String, trim: true },
+      exp_month: { type: String, trim: true },
+      exp_year: { type: String, trim: true },
+      bin: { type: String, trim: true },
+      bank: { type: String, trim: true },
+      signature: { type: String, trim: true },
+      reusable: { type: Boolean },
+      country_code: { type: String, trim: true },
+    },
   },
   {
     timestamps: true,
@@ -44,7 +61,7 @@ const subscriptionSchema = new mongoose.Schema(
 );
 
 // Add a method to set subscription period
-subscriptionSchema.methods.activateSubscription = function () {
+paymentSchema.methods.activatePayment = function () {
   this.status = 'active';
   this.paymentStatus = 'completed';
   this.startDate = new Date();
@@ -53,11 +70,11 @@ subscriptionSchema.methods.activateSubscription = function () {
 };
 
 // Add a virtual field to check if subscription is expired
-subscriptionSchema.virtual('isExpired').get(function () {
+paymentSchema.virtual('isExpired').get(function () {
   if (!this.endDate) return true;
   return new Date() > this.endDate;
 });
 
-const Subscription = mongoose.model('Subscription', subscriptionSchema);
+const Payment = mongoose.model('Payment', paymentSchema);
 
-export { Subscription };
+export { Payment };

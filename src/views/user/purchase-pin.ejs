@@ -1,0 +1,84 @@
+
+<%- include (`../partials/userHtmlTag`); -%>
+<head>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../css/card.css" />
+</head>
+<body>
+  <div
+    class="flex h-screen bg-gray-50 dark:bg-gray-900"
+    :class="{ 'overflow-hidden': isSideMenuOpen }"
+  >
+
+    <%- include (`../partials/userSidebar`); -%>
+
+    <div class="flex flex-col flex-1 w-full">
+      <%- include (`../partials/userHeader`); -%>
+  
+      <main class="h-full overflow-y-auto">
+        <div class="container px-6 mx-auto grid">
+
+               <div class="w-full p-4">
+ 
+                    <h2
+                      class="my-6 text-2xl font-semibold text-gray-700 dark:text-gray-200"
+                    >
+                         Purchase Access Pin
+                    </h2>
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="pinCardsContainer">
+                          <!-- Cards will be dynamically inserted here -->
+                    </div>
+                </div>
+    
+            <div id="pinCardsContainer">
+                <!-- Render Pin Cards -->
+                <% pins.forEach(pin => { %>
+                  <div class="card">
+                    <div class="card-header bg-gradient">
+                      <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <span class="duration"><%= pin.duration %></span>
+                        <i class="fas fa-credit-card icon"></i>
+                      </div>
+                    </div>
+                    <div class="card-content">
+                      <div class="info-row">
+                        <span style="display: flex; align-items: center;">
+                          <i class="fas fa-tag small-icon"></i>
+                          Pin
+                        </span>
+                        <span class="pins-count" style="font-weight: 600;"><%= pin.pin_number %></span>
+                      </div>
+                      <div class="info-row">
+                        <span style="display: flex; align-items: center;">
+                          <i class="fas fa-clock small-icon"></i>
+                          Validity
+                        </span>
+                        <span class="validity" style="font-weight: 600;"><%= pin.duration %></span>
+                      </div>
+                      <div class="price">#<%= pin.price %>.00</div>
+              
+
+                      <% if (pin.pin_number === 'Pending') { %>
+                        <button class="purchase-button">
+                          <a href="/user/payment?pinId=<%= pin._id %>">Purchase Now</a>
+                        </button>
+                      <% } else { %>
+                        <button class="purchase-button disabled" disabled>
+                          Purchased
+                        </button>
+                      <% } %>
+                      
+                    </div>
+                  </div>
+                <% }); %>
+              
+              </div>
+              
+        </div>
+      </main>
+    </div>
+
+  </div>
+  <script src="../../mail/redirect.js"></script>
+</body>
+</html>
