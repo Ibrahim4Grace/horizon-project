@@ -59,90 +59,42 @@
                         </h1>
                         
 
-                        <form class="mt-6 sm:mt-8 space-y-4">
+                        <form class="mt-6 sm:mt-8 space-y-4" id="contactForm" data-url="/contact" method="post">
                             <input
                             class="text-xs w-full p-4 shadow focus:outline-none focus:ring-1"
                             type="text"
                             placeholder="Name"
+                            name="name"
                           />
+                          <div id="nameError" class="text-danger"></div>
                           <input
                             class="text-xs w-full p-4 shadow focus:outline-none focus:ring-1"
                             type="email"
                             placeholder="email address"
+                            name="email"
                           />
+                          <div id="emailError" class="text-danger"></div>
     
                           <textarea
                           class="text-xs w-full p-4 shadow focus:outline-none focus:ring-1"
                           placeholder="Enter your text here"
                           maxlength="250"
+                          name="message"
                         ></textarea>
+                        <div id="messageError" class="text-danger"></div>
 
-                                <button
-                                class="w-full py-3 px-6 text-sm text-white font-medium rounded-md bg-gradient-to-r from-[#ebb52d] to-[#ffa724] hover:from-[#ffa724] hover:to-[#ebb52d] transition-all duration-200 gradienties-button"
-                                type="submit"
-                                style="background: linear-gradient(to right, #ebb52d, #ffa724);"
-                              >
-                                Sign Up
-                              </button>
+                              <button
+                              class="w-full py-3 px-6 text-sm text-white font-medium rounded-md bg-gradient-to-r from-[#ebb52d] to-[#ffa724] hover:from-[#ffa724] hover:to-[#ebb52d] transition-all duration-200 gradienties-button" type="submit" id="submitButton"
+                              style="background: linear-gradient(to right, #ebb52d, #ffa724);"
+                            >
+                              Send message
+                            </button>
                         </form>
                     </div>
                 </div>
             </div>
         </div>
     </header>
-
-
-        <!-- <header class="h-screen w-screen overflow-hidden">
-            <div class="h-full w-full container mx-auto px-4 md:px-8 lg:px-12 flex items-center">
-              <div class="w-full grid md:grid-cols-2 gap-4 md:gap-8">
-          
-                <div class="hidden md:flex justify-center items-center">
-                  <img 
-                    class="w-auto h-auto max-h-[70vh] object-contain" 
-                    src="../img/icon/Logic-pana.svg" 
-                    alt=""
-                  />
-                </div>
-          
-      
-                <div class="w-full md:px-4">
-                  <div class="bg-gray-50 p-6 md:p-8 lg:p-10 h-fit">
-                    <h1 class="text-2xl md:text-3xl font-semibold">Contact Us</h1>
-                    
-                    <form class="space-y-3 mt-6">
-                      <input
-                        class="text-xs w-full p-4 shadow focus:outline-none focus:ring-1"
-                        type="text"
-                        placeholder="Name"
-                      />
-                      <input
-                        class="text-xs w-full p-4 shadow focus:outline-none focus:ring-1"
-                        type="email"
-                        placeholder="email address"
-                      />
-
-                      <textarea
-                      class="text-xs w-full p-4 shadow focus:outline-none focus:ring-1"
-                      placeholder="Enter your text here"
-                      maxlength="250"
-                    ></textarea>
-                    
-                    <button
-                    class="w-full py-3 px-6 text-sm text-white font-medium rounded-md bg-gradient-to-r from-[#ebb52d] to-[#ffa724] hover:from-[#ffa724] hover:to-[#ebb52d] transition-all duration-200"
-                    type="submit"
-                    style="background: linear-gradient(to right, #ebb52d, #ffa724);"
-                  >
-                    Sign Up
-                  </button>
-
-                    </form>
-          
-                  </div>
-                </div>
-              </div>
-            </div>
-          </header> -->
-    
 
 
       <script
@@ -171,6 +123,7 @@
         src="//cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js "
       ></script>
       <script src="../js/scroll.js "></script>
+      <script src="../mail/contact.js "></script>
     </html>
   </body>
 </html>

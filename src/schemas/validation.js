@@ -208,3 +208,17 @@ export const updateDataSchema = z.object({
 
     .transform(sanitizeInput),
 });
+
+export const contactSchema = z.object({
+  name: z
+    .string()
+    .trim()
+    .min(1, 'Full nme is required')
+    .transform(sanitizeInput),
+  email: z.string().trim().min(1, 'Email is required').transform(sanitizeInput),
+  message: z
+    .string()
+    .trim()
+    .min(1, 'message is required')
+    .transform(sanitizeInput),
+});

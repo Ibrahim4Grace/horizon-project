@@ -1,12 +1,12 @@
 'use strict';
 
 document.addEventListener('DOMContentLoaded', function () {
-  const settingForm = document.getElementById('settingForm');
+  const contactForm = document.getElementById('contactForm');
 
-  settingForm.addEventListener('submit', async function (event) {
+  contactForm.addEventListener('submit', async function (event) {
     event.preventDefault();
 
-    const settingUrl = settingForm.getAttribute('data-url');
+    const contactUrl = contactForm.getAttribute('data-url');
     const submitButton = document.getElementById('submitButton');
 
     submitButton.innerHTML =
@@ -14,8 +14,8 @@ document.addEventListener('DOMContentLoaded', function () {
     submitButton.disabled = true;
 
     try {
-      const formData = Object.fromEntries(new FormData(settingForm));
-      const response = await fetch(settingUrl, {
+      const formData = Object.fromEntries(new FormData(contactForm));
+      const response = await fetch(contactUrl, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -50,7 +50,7 @@ document.addEventListener('DOMContentLoaded', function () {
       console.error('Error:', error);
       alert('An error occurred while processing your request.');
     } finally {
-      submitButton.innerHTML = 'Update data';
+      submitButton.innerHTML = 'Send message';
       submitButton.disabled = false;
     }
   });

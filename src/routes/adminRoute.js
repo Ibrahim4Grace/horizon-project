@@ -2,7 +2,7 @@ import { Router } from 'express';
 
 import * as adminCtlr from '../controllers/index.js';
 import { authMiddleware, adminMiddleware } from '../middlewares/index.js';
-import { User, Course, Pin } from '../models/index.js';
+import { Course, Pin } from '../models/index.js';
 import { validateData } from '../middlewares/index.js';
 import { paginatedResults } from '../utils/index.js';
 import { courseSchema, pinSchema } from '../schemas/index.js';

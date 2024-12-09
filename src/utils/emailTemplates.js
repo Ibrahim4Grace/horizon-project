@@ -95,3 +95,14 @@ export const updateProfile = (user, updatedUser) => ({
     <p>Best regards,<br>The Horznet Team</p>
   `,
 });
+
+export const contactUsFeedBack = (newContactUs) => ({
+  from: config.nodemailerEmail,
+  to: newContactUs.email,
+  subject: `Thank you for reaching out to us!`,
+  html: `
+     <p>Dear  ${newContactUs.name},</p>
+  <p>We truly appreciate you taking the time to contact us regarding your inquiry. Your message has been received, and we will make sure to address it promptly.</p>
+    <p>Best regards,<br>The Horznet Team</p>
+  `,
+});
