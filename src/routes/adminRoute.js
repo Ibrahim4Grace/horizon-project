@@ -1,8 +1,7 @@
 import { Router } from 'express';
-
 import * as adminCtlr from '../controllers/index.js';
 import { authMiddleware, adminMiddleware } from '../middlewares/index.js';
-import { Course, Pin } from '../models/index.js';
+import { Course, Pin, User } from '../models/index.js';
 import { validateData } from '../middlewares/index.js';
 import { paginatedResults } from '../utils/index.js';
 import { courseSchema, pinSchema } from '../schemas/index.js';
@@ -61,7 +60,13 @@ adminRoute.get(
   adminCtlr.purchase
 );
 adminRoute.get('/setting', authMiddleware, adminMiddleware, adminCtlr.setting);
-adminRoute.get('/student', authMiddleware, adminMiddleware, adminCtlr.student);
+adminRoute.get(
+  '/student',
+  authMiddleware,
+  adminMiddleware,
+  paginatedResults(User),
+  adminCtlr.student
+);
 
 adminRoute.delete(
   '/signOut',

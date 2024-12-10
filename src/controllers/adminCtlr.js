@@ -26,7 +26,7 @@ export const uploadAdminImage = asyncHandler(async (req, res) => {
   };
   user.image = image;
   await user.save();
-  const callbackUrl = '/user/index';
+  const callbackUrl = '/admin/index';
   return res.status(200).json({
     callbackUrl,
     success: true,
@@ -125,7 +125,16 @@ export const setting = (req, res) => {
 
 export const student = (req, res) => {
   const admin = req.currentAdmin;
-  res.render('admin/student', { admin });
+
+  const { results, currentPage, totalPages, limit } = res.paginatedResults;
+
+  res.render('admin/student', {
+    admin,
+    students: results,
+    currentPage,
+    totalPages,
+    limit,
+  });
 };
 
 export const adminLogout = asyncHandler(async (req, res) => {
