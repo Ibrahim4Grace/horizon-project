@@ -1,150 +1,3 @@
-// 'use strict';
-
-// document.addEventListener('DOMContentLoaded', function () {
-//   const paymentForm = document.getElementById('paymentForm');
-//   if (!paymentForm) return;
-
-//   const submitButton = paymentForm.querySelector('button[type="submit"]');
-//   if (!submitButton) return;
-
-//   let isProcessing = false;
-//   let paymentComplete = false;
-
-//   // Card number formatting with error handling
-//   function formatCardNumber(input) {
-//     try {
-//       if (!input || !input.value) return;
-//       let value = input.value.replace(/\s+/g, '').replace(/[^0-9]/gi, '');
-//       if (value.length > 16) value = value.slice(0, 16);
-//       let formattedValue = '';
-//       for (let i = 0; i < value.length; i++) {
-//         if (i > 0 && i % 4 === 0) {
-//           formattedValue += ' ';
-//         }
-//         formattedValue += value[i];
-//       }
-//       input.value = formattedValue;
-//     } catch (error) {
-//       console.error('Error formatting card number:', error);
-//       input.value = input.value.slice(0, 16);
-//     }
-//   }
-
-//   // Initialize form elements with error handling
-//   const formElements = {
-//     cardNumber: paymentForm.querySelector(
-//       'input[placeholder="0000 0000 0000 0000"]'
-//     ),
-//     expiryMonth: paymentForm.querySelector('input[placeholder="MM"]'),
-//     expiryYear: paymentForm.querySelector('input[placeholder="YY"]'),
-//     cvv: paymentForm.querySelector('input[placeholder="000"]'),
-//   };
-
-//   // Validate all form elements exist
-//   for (const [key, element] of Object.entries(formElements)) {
-//     if (!element) return;
-//   }
-
-//   // Add input listeners with error handling
-//   formElements.cardNumber.addEventListener('input', (e) => {
-//     try {
-//       formatCardNumber(e.target);
-//     } catch (error) {
-//       console.error('Error in card number input handler:', error);
-//     }
-//   });
-
-//   // Month validation with bounds checking
-//   formElements.expiryMonth.addEventListener('input', function () {
-//     try {
-//       let value = this.value.replace(/\D/g, '');
-//       const month = parseInt(value);
-//       if (value.length >= 2) {
-//         if (month < 1) this.value = '01';
-//         else if (month > 12) this.value = '12';
-//         else this.value = value.slice(0, 2);
-//       } else {
-//         this.value = value;
-//       }
-//     } catch (error) {
-//       console.error('Error in expiry month input handler:', error);
-//       this.value = '';
-//     }
-//   });
-
-//   // Year validation with proper date checking
-//   formElements.expiryYear.addEventListener('input', function () {
-//     try {
-//       let value = this.value.replace(/\D/g, '');
-//       if (value.length >= 2) {
-//         const currentYear = new Date().getFullYear() % 100;
-//         const year = parseInt(value);
-//         if (year < currentYear) {
-//           this.value = currentYear.toString();
-//         } else {
-//           this.value = value.slice(0, 2);
-//         }
-//       } else {
-//         this.value = value;
-//       }
-//     } catch (error) {
-//       console.error('Error in expiry year input handler:', error);
-//       this.value = '';
-//     }
-//   });
-
-//   // CVV validation with length check
-//   formElements.cvv.addEventListener('input', function () {
-//     try {
-//       let value = this.value.replace(/\D/g, '');
-//       this.value = value.slice(0, 3);
-//     } catch (error) {
-//       console.error('Error in CVV input handler:', error);
-//       this.value = '';
-//     }
-//   });
-
-//   // Enhanced form data validation
-//   function validateFormData(formData) {
-//     const errors = [];
-//     const currentDate = new Date();
-//     const currentYear = currentDate.getFullYear() % 100;
-//     const currentMonth = currentDate.getMonth() + 1;
-
-//     try {
-//       // Card number validation with Luhn algorithm
-//       if (!formData.card.number || !/^\d{16}$/.test(formData.card.number)) {
-//         errors.push('Invalid card number');
-//       }
-
-//       // Expiry validation with proper date comparison
-//       const expYear = parseInt(formData.card.expiryYear);
-//       const expMonth = parseInt(formData.card.expiryMonth);
-
-//       if (!expMonth || expMonth < 1 || expMonth > 12) {
-//         errors.push('Invalid expiry month');
-//       }
-//       if (!expYear || expYear < currentYear) {
-//         errors.push('Invalid expiry year');
-//       }
-//       if (expYear === currentYear && expMonth < currentMonth) {
-//         errors.push('Card has expired');
-//       }
-
-//       // CVV validation
-//       if (!formData.card.cvv || !/^\d{3}$/.test(formData.card.cvv)) {
-//         errors.push('Invalid CVV');
-//       }
-//     } catch (error) {
-//       console.error('Error in form validation:', error);
-//       errors.push('Error validating form data');
-//     }
-
-//     return errors;
-//   }
-
-// });
-
 ('use strict');
 
 document.addEventListener('DOMContentLoaded', function () {
@@ -154,8 +7,31 @@ document.addEventListener('DOMContentLoaded', function () {
   const submitButton = paymentForm.querySelector('button[type="submit"]');
   if (!submitButton) return;
 
+  // Define formElements first - IMPORTANT FIX
+  const formElements = {
+    cardNumber: paymentForm.querySelector(
+      'input[placeholder="0000 0000 0000 0000"]'
+    ),
+    expiryMonth: paymentForm.querySelector('input[placeholder="MM"]'),
+    expiryYear: paymentForm.querySelector('input[placeholder="YY"]'),
+    cvv: paymentForm.querySelector('input[placeholder="000"]'),
+  };
+
+  // Validate all form elements exist
+  for (const [key, element] of Object.entries(formElements)) {
+    if (!element) {
+      console.error(`Missing form element: ${key}`);
+      return;
+    }
+  }
+
   let isProcessing = false;
   let paymentComplete = false;
+
+  // Add input event listeners for card formatting
+  formElements.cardNumber.addEventListener('input', function () {
+    formatCardNumber(this);
+  });
 
   // Nigerian banks commonly issue these card types
   const cardPatterns = {
@@ -163,6 +39,28 @@ document.addEventListener('DOMContentLoaded', function () {
     mastercard: /^5[1-5][0-9]{14}$/, // Nigerian Mastercard
     visa: /^4[0-9]{12}(?:[0-9]{3})?$/, // Nigerian Visa
   };
+
+  function validateLuhn(cardNumber) {
+    let sum = 0;
+    let isEven = false;
+
+    // Loop from right to left
+    for (let i = cardNumber.length - 1; i >= 0; i--) {
+      let digit = parseInt(cardNumber[i], 10);
+
+      if (isEven) {
+        digit *= 2;
+        if (digit > 9) {
+          digit -= 9;
+        }
+      }
+
+      sum += digit;
+      isEven = !isEven;
+    }
+
+    return sum % 10 === 0;
+  }
 
   // Improved card number formatting with Verve support
   function formatCardNumber(input) {
@@ -312,8 +210,6 @@ document.addEventListener('DOMContentLoaded', function () {
       }
     }
   });
-
-  // Rest of your existing code for PIN and OTP handling remains the same...
 
   // Enhanced PIN request handler
   async function handlePinRequest(reference) {
