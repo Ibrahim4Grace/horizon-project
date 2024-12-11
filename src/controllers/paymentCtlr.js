@@ -1,4 +1,10 @@
-import { Payment, Course, Pin, PurchaseHistory } from '../models/index.js';
+import {
+  Payment,
+  Course,
+  Pin,
+  PurchaseHistory,
+  User,
+} from '../models/index.js';
 import { config } from '../configs/index.js';
 import { asyncHandler } from '../utils/asyncHandler.js';
 import {
