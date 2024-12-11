@@ -3,7 +3,7 @@ import { asyncHandler } from '../utils/asyncHandler.js';
 export const paginatedResults = (model, getFilter = () => ({})) => {
   return asyncHandler(async (req, res, next) => {
     const page = parseInt(req.query.page) || 1;
-    const perPage = parseInt(req.query.limit) || 6;
+    const perPage = parseInt(req.query.limit) || 10;
 
     const filter = getFilter(req);
 
@@ -15,6 +15,7 @@ export const paginatedResults = (model, getFilter = () => ({})) => {
       .sort({ createdAt: -1 })
       .skip((page - 1) * perPage)
       .limit(perPage)
+      .lean()
       .exec();
 
     res.paginatedResults = {
