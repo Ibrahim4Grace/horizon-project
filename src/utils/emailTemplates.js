@@ -106,3 +106,43 @@ export const contactUsFeedBack = (newContactUs) => ({
     <p>Best regards,<br>The Horznet Team</p>
   `,
 });
+
+export const newAdmin = (admins) => ({
+  from: config.nodemailerEmail,
+  to: admins.email,
+  subject: 'Welcome to Horznet',
+  html: `
+    <p>Hello ${admins.full_name},</p>
+    <p>Welcome to Horznet! Your admin account has been successfully created. Below are your account details:</p>
+    <ul>
+      <li><strong>Full Name:</strong> ${admins.full_name}</li>
+      <li><strong>Email Address:</strong> ${admins.email}</li>
+      <li><strong>Phone Number:</strong> ${admins.phone_number}</li>
+      <li><strong>Temporary Password:</strong> 123456</li>
+    </ul>
+    <p><strong>Important:</strong> Please log in to your account and change your password.</p>
+    <p>If you have any questions or need assistance, feel free to contact our support team. We're here to help and ensure you have the best experience on our platform.</p>
+    <p>Best regards,</p>
+    <p>The Horznet Team</p>
+  `,
+});
+
+export const updateAdminProfile = (admin, updatedAdmin) => ({
+  from: config.nodemailerEmail,
+  to: admin.email,
+  subject: `Your Information Has Been Modified!`,
+  html: `
+     <p>Dear  ${admin.full_name},</p>
+    <p>This message is to inform you that there has been an update to your information in our database.</p>
+
+    <p>Your new information:</p>
+    <ul>
+        <li>Full Name: ${updatedAdmin.full_name}</li>
+        <li>Email Address: ${updatedAdmin.email}</li>
+        <li>Phone Number: ${updatedAdmin.phone_number}</li>
+    </ul>
+
+    <p>Thank you for keeping your account secure!</p>
+    <p>Best regards,<br>The Horznet Team</p>
+  `,
+});
