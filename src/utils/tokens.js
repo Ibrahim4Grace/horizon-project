@@ -20,8 +20,6 @@ export const generateTokensAndSetCookies = (res, userId) => {
     expiresIn: config.refreshExpireTime,
   });
 
-  console.log('Generated tokens:', { accessToken, refreshToken });
-
   res.cookie('accessToken', accessToken, {
     maxAge: 15 * 60 * 1000,
     httpOnly: true,
