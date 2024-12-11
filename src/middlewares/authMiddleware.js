@@ -11,7 +11,8 @@ export const authMiddleware = asyncHandler(async (req, res, next) => {
 
   // Determine user type from request path
   const isAdminRoute =
-    req.path.startsWith('/admin') || req.path.includes('/auth/admin');
+    req.originalUrl.includes('/admin') ||
+    req.originalUrl.includes('/auth/admin');
   const loginRedirectUrl = isAdminRoute
     ? '/auth/admin/login'
     : '/auth/user/login';

@@ -17,7 +17,6 @@ authRoute.get('/user/register', authCtlr.userRegister);
 authRoute.get('/user/forget-password', authCtlr.userForgetPassword);
 authRoute.get('/user/verify-otp', authCtlr.userVerifyOtp);
 authRoute.get('/admin/login', authCtlr.adminLogins);
-authRoute.get('/admin/register', authCtlr.adminRegister);
 authRoute.get('/admin/forget-password', authCtlr.adminForgetPassword);
 authRoute.get('/admin/verify-otp', authCtlr.adminVerifyOtp);
 authRoute.get('/user/password/verify-otp', authCtlr.userVerifyPasswordOtpView);
@@ -33,12 +32,6 @@ authRoute.post(
   '/user/register',
   validateData(registerSchema),
   authCtlr.registerUser
-);
-
-authRoute.post(
-  '/admin/register',
-  validateData(adminRegisterSchema),
-  authCtlr.registerAdmin
 );
 
 authRoute.post(

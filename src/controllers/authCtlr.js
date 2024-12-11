@@ -38,29 +38,6 @@ export const registerUser = asyncHandler(async (req, res) => {
   });
 });
 
-export const adminRegister = (req, res) => {
-  res.render('auth/admin/register');
-};
-
-export const registerAdmin = asyncHandler(async (req, res) => {
-  const adminData = {
-    full_name: req.body.full_name,
-    email: req.body.email,
-    password: req.body.password,
-    role: 'Admin',
-  };
-
-  await authServiceInstance.register(adminData, Admin);
-
-  const redirectUrl = '/auth/admin/verify-otp';
-
-  res.status(201).json({
-    redirectUrl,
-    success: true,
-    message: 'Registration successful. Please verify your email.',
-  });
-});
-
 export const userVerifyOtp = (req, res) => {
   res.render('auth/user/verify-otp', { isPasswordReset: false });
 };
