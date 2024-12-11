@@ -49,42 +49,32 @@ export const registerSchema = z.object({
     ),
 });
 
-export const adminRegisterSchema = z
-  .object({
-    full_name: z
-      .string()
-      .trim()
-      .min(1, 'Name is required')
-      .transform(sanitizeInput),
+export const adminRegisterSchema = z.object({
+  full_name: z
+    .string()
+    .trim()
+    .min(1, 'Name is required')
+    .transform(sanitizeInput),
 
-    email: z
-      .string()
-      .trim()
-      .min(1, 'Email is required')
-      .email('Invalid email address')
-      .transform(sanitizeInput),
+  email: z
+    .string()
+    .trim()
+    .min(1, 'Email is required')
+    .email('Invalid email address')
+    .transform(sanitizeInput),
 
-    password: z
-      .string()
-      .min(8, 'Password must be at least 8 characters long')
-      .transform(sanitizeInput),
-    confirm_password: z
-      .string()
-      .min(8, 'Confirm password is required')
-      .regex(
-        passwordRegex,
-        'Password must include at least one uppercase letter, one lowercase letter, one number, and one special character'
-      )
-      .transform(sanitizeInput),
-  })
-  .superRefine(({ password, confirm_password }, ctx) => {
-    if (password !== confirm_password) {
-      ctx.addIssue({
-        path: ['confirm_password'],
-        message: 'Passwords must match',
-      });
-    }
-  });
+  password: z
+    .string()
+    .min(6, 'Password must be at least 6 characters long')
+    .optional()
+    .transform(sanitizeInput),
+
+  phone_number: z
+    .string()
+    .trim()
+    .min(1, 'Phone number is required')
+    .transform(sanitizeInput),
+});
 
 export const verifySchema = z.object({
   otp: z.string().trim().min(1, 'otp is required').transform(sanitizeInput),
@@ -220,5 +210,40 @@ export const contactSchema = z.object({
     .string()
     .trim()
     .min(1, 'message is required')
+    .transform(sanitizeInput),
+});
+
+export const updateadminSchema = z.object({
+  full_name: z
+    .string()
+    .trim()
+    .min(1, 'Full nme is required')
+    .transform(sanitizeInput),
+  email: z.string().trim().min(1, 'Email is required').transform(sanitizeInput),
+  phone_number: z
+    .string()
+    .trim()
+    .min(1, 'Phone number is required')
+    .transform(sanitizeInput),
+  current_password: z
+    .string()
+    .optional()
+    .refine((value) => {
+      if (value && value.length < 8) {
+        return false;
+      }
+      return true;
+    }, 'Password must be at least 8 characters long')
+    .transform(sanitizeInput),
+  new_password: z
+    .string()
+    .optional()
+    .refine((value) => {
+      if (value && value.length < 8) {
+        return false;
+      }
+      return true;
+    }, 'Password must include at least one uppercase letter, one lowercase letter, one number, and one special character')
+
     .transform(sanitizeInput),
 });
