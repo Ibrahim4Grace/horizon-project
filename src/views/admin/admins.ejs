@@ -1,0 +1,201 @@
+
+<%- include (`../partials/adminHtmlTag`); -%>
+<body>
+  <div
+    class="flex h-screen bg-gray-50 dark:bg-gray-900"
+    :class="{ 'overflow-hidden': isSideMenuOpen }"
+  >
+
+    <%- include (`../partials/adminSidebar`); -%>
+
+    <div class="flex flex-col flex-1 w-full">
+      <%- include (`../partials/adminHeader`); -%>
+  
+      <main class="h-full overflow-y-auto">
+        <div class="container px-6 mx-auto grid">
+          <h2
+            class="my-6 text-2xl font-semibold text-gray-700 dark:text-gray-200"
+          >
+            Add New Admin
+          </h2>
+          <div id="generalError" class="text-danger"></div>
+
+       <div
+         class="px-4 py-3 mb-8 bg-white rounded-lg shadow-md dark:bg-gray-800"
+       >
+       <form id="adminForm" data-url="/admin/admins" method="post">
+
+         <!-- Helper text -->
+         <label class="block mt-4 text-sm">
+          <span class="text-gray-700 dark:text-gray-400">
+            Full name 
+          </span>
+          <input
+            class="block w-full mt-1 text-sm dark:text-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray form-input"
+            placeholder="Admin name" name="full_name" type="text"
+          />
+          <div id="full_nameError" class="text-danger"></div>
+        </label>
+
+         <!-- Helper text -->
+         <label class="block mt-4 text-sm">
+          <span class="text-gray-700 dark:text-gray-400">
+          Email
+          </span>
+          <input
+            class="block w-full mt-1 text-sm dark:text-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray form-input"
+            placeholder="Email" type="email" name="email"
+          />
+          <div id="emailError" class="text-danger"></div>
+        </label>
+ 
+           <!-- Helper text -->
+           <label class="block mt-4 text-sm">
+            <span class="text-gray-700 dark:text-gray-400">
+            Phone Number
+            </span>
+            <input
+              class="block w-full mt-1 text-sm dark:text-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray form-input"
+              placeholder="Phone number" type="text" name="phone_number"
+            />
+            <div id="phone_numberError" class="text-danger"></div>
+          </label>
+   
+
+         <!-- Helper text -->
+         <label class="block mt-4 text-sm">
+           <span class="text-gray-700 dark:text-gray-400">
+           Password
+           </span>
+           <input
+             class="block w-full mt-1 text-sm dark:text-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray form-input"
+             type="text" name="password" value="123456" readonly
+           />
+           <div id="passwordError" class="text-danger"></div>
+         </label>
+         <hr class="my-8" />
+         <div>
+            <button
+              class="px-5 py-3 font-medium leading-5 text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-lg active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple" type="submit" id="submitButton"
+            >
+              Add admin
+            </button>
+          </div>
+        </form>
+       </div>
+
+
+
+       <!-- With actions -->
+       <h4
+       class="mb-4 text-lg font-semibold text-gray-600 dark:text-gray-300"
+     >
+       All Admin
+     </h4>
+     <div class="w-full overflow-hidden rounded-lg shadow-xs">
+       <div class="w-full overflow-x-auto">
+        <table class="w-full whitespace-no-wrap">
+          <thead>
+            <tr
+              class="text-xs font-semibold tracking-wide text-left text-gray-500 uppercase border-b dark:border-gray-700 bg-gray-50 dark:text-gray-400 dark:bg-gray-800" 
+            >
+              <th class="px-4 py-3">Full Name</th>
+              <th class="px-4 py-3">Email address</th>
+              <th class="px-4 py-3">Phone number</th>
+              <th class="px-4 py-3">Registration Date</th>
+            </tr>
+          </thead>
+          <tbody class="bg-white divide-y dark:divide-gray-700 dark:bg-gray-800">
+            <% if (allAdmin && allAdmin.length > 0) { %>
+              <% allAdmin.forEach(admin => { %>
+                <tr class="text-gray-700 dark:text-gray-400">
+                  <td class="px-4 py-3">
+                    <div class="flex items-center text-sm">
+   
+                      <div
+                        class="relative hidden w-8 h-8 mr-3 rounded-full md:block"
+                      >
+
+                        <% if (admin && admin.image && admin.image.imageUrl) { %>
+                        <img
+                        class="object-cover w-full h-full rounded-full"
+                          src="<%= admin.image.imageUrl %>"
+                          alt="Image"
+                          width="80"
+                          height="80"
+                        />
+                        <% } else { %>
+                        <div style="position: relative; cursor: pointer">
+                          <img
+                          class="object-cover w-full h-full rounded-full"
+                            src="https://bootdey.com/img/Content/avatar/avatar5.png"
+                            alt="image"
+                       
+                          />
+                        </div>
+                        <% } %>
+                        <div
+                          class="absolute inset-0 rounded-full shadow-inner"
+                          aria-hidden="true"
+                        ></div>
+                      </div>
+                      <div>
+                        <p class="font-semibold"><%= admin.full_name %></p>
+                      
+                      </div>
+                    </div>
+                  </td>
+                  <td class="px-4 py-3 text-sm"><%= admin.email %></td>
+                  <td class="px-4 py-3 text-sm"><%= admin.phone_number %></td>
+         
+                  <td class="px-4 py-3 text-sm"><%= new Date(admin.createdAt).toLocaleString('en-US', {
+                    weekday: 'short',
+                    year: 'numeric',
+                    month: 'short',
+                    day: 'numeric',
+                    hour: '2-digit',
+                    minute: '2-digit',
+                    second: '2-digit',
+                    hour12: false,
+                  }) %></td>
+                  
+                </tr>
+              <% }); %>
+            <% } else { %>
+              <tr>
+                <td colspan="5" class="px-4 py-3 text-center text-gray-500">No admin found.</td>
+              </tr>
+            <% } %>
+          </tbody>
+        </table>
+       </div>
+       <div
+         class="grid px-4 py-3 text-xs font-semibold tracking-wide text-gray-500 uppercase border-t dark:border-gray-700 bg-gray-50 sm:grid-cols-9 dark:text-gray-400 dark:bg-gray-800"
+       >
+  
+         <span class="col-span-2"></span>
+         <!-- Pagination -->
+         <span class="flex col-span-4 mt-2 sm:mt-auto sm:justify-end">
+          <nav aria-label="Table navigation">
+            <ul class="inline-flex items-center">
+          
+              <% for (let i = 1; i <= totalPages; i++) { %>
+                <li>
+                  <a href="/admin/admins?page=<%= i %>"
+                     class="px-3 py-1 <%= currentPage === i ? 'text-white bg-purple-600' : '' %> rounded-md focus:outline-none focus:shadow-outline-purple">
+                    <%= i %>
+                  </a>
+                </li>
+              <% } %>
+            </ul>
+          </nav>
+        </span>
+       </div>
+     </div>
+        </div>
+      </main>
+    </div>
+  </div>
+  <script src="../../mail/admin.js"></script>
+</body>
+</html>
