@@ -364,6 +364,60 @@ export const studentPost = asyncHandler(async (req, res) => {
   });
 });
 
+export const editStudentPost = asyncHandler(async (req, res) => {
+  const studentId = req.params.studentId;
+
+  if (!studentId) {
+    throw new ResourceNotFound('Student not found!');
+  }
+
+  const { full_name, course_interest, class_option, phone_number, email } =
+    req.body;
+
+  const updatedUser = await User.findByIdAndUpdate(
+    studentId,
+    {
+      $set: {
+        full_name,
+        course_interest,
+        class_option,
+        phone_number,
+        email,
+      },
+    },
+    { new: true }
+  );
+
+  if (!updatedUser) {
+    throw new ResourceNotFound('Student not found or update failed!');
+  }
+
+  const redirectUrl = '/admin/student';
+  return res.status(200).json({
+    success: true,
+    student: updatedUser,
+    redirectUrl,
+    message: 'Student successfully updated',
+  });
+});
+
+export const deleteStudent = asyncHandler(async (req, res) => {
+  const admin = req.currentAdmin;
+  const studentId = await User.findById(req.params.studentId);
+
+  if (!studentId) {
+    throw new ResourceNotFound('User not found.');
+  }
+  await User.findByIdAndDelete(req.params.courseId);
+  const redirectUrl = '/admin/student';
+  res.status(201).json({
+    redirectUrl,
+    success: true,
+    admin,
+    message: 'User deleted successfully',
+  });
+});
+
 export const adminLogout = asyncHandler(async (req, res) => {
   const logoutRedirectUrl = '/auth/admin/login';
   res.clearCookie('accessToken', '', {

@@ -108,7 +108,18 @@ adminRoute.get(
   paginatedResults(User),
   adminCtlr.student
 );
-
+adminRoute.put(
+  '/student/:studentId',
+  authMiddleware,
+  adminMiddleware,
+  adminCtlr.editStudentPost
+);
+adminRoute.delete(
+  '/student/:studentId',
+  authMiddleware,
+  adminMiddleware,
+  adminCtlr.deleteStudent
+);
 adminRoute.delete(
   '/signOut',
   authMiddleware,
