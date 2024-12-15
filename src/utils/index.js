@@ -5,3 +5,4 @@ export { asyncHandler } from './asyncHandler.js';
 export * from './tokens.js';
 export * from './pagination.js';
 export * from './paymentRequest.js';
+export * from './payment.js';

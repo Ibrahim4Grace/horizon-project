@@ -4,14 +4,16 @@ import {
   Pin,
   PurchaseHistory,
   Transaction,
-  User,
 } from '../models/index.js';
 import { config } from '../configs/index.js';
 import { asyncHandler } from '../utils/asyncHandler.js';
+
 import {
   makePaystackRequest,
   handleSuccessfulPayment,
   generateOTP,
+  completeTransferTransaction,
+  calculatePaystackSignature,
 } from '../utils/index.js';
 import { ServerError, ResourceNotFound } from '../middlewares/index.js';
 
@@ -332,14 +334,14 @@ export const processPayment = async (req, res) => {
       await transaction.save();
 
       // Complete the transaction
-      const generatedPin = await completeTransferTransaction(transaction);
-      return res.json({
-        status: true,
-        reference: transfer.data.reference,
-        authorization_url: transfer.data.authorization_url,
-        access_code: transfer.data.access_code,
-        ...(generatedPin && { pin: generatedPin }),
-      });
+      // const generatedPin = await completeTransferTransaction(transaction);
+      // return res.json({
+      //   status: true,
+      //   reference: transfer.data.reference,
+      //   authorization_url: transfer.data.authorization_url,
+      //   access_code: transfer.data.access_code,
+      //   ...(generatedPin && { pin: generatedPin }),
+      // });
     }
   } catch (error) {
     console.error('Payment processing error:', error);
@@ -417,56 +419,6 @@ export const processPayment = async (req, res) => {
 //   }
 // };
 
-async function completeTransferTransaction(transaction) {
-  try {
-    // Update transaction status
-    transaction.status = 'completed';
-    await transaction.save();
-
-    // Generate PIN if this is a pin purchase
-    let generatedPin = null;
-    if (transaction.itemType === 'pin') {
-      const { otp } = await generateOTP();
-      generatedPin = otp;
-    }
-
-    // Create payment record
-    const payment = new Payment({
-      user: transaction.userId,
-      status: 'active',
-      itemId: transaction.itemId,
-      paymentReference: transaction.reference,
-      amount: transaction.amount,
-      paymentStatus: 'completed',
-      paymentDetails: {
-        amount: transaction.amount,
-        channel: transaction.type,
-        paidAt: new Date(),
-        transactionDate: new Date(),
-      },
-    });
-    await payment.save();
-    payment.activatePayment();
-    await payment.save();
-
-    // Create purchase history with PIN if applicable
-    await PurchaseHistory.create({
-      user: transaction.userId,
-      [transaction.itemType]: transaction.itemId,
-      itemType: transaction.itemType,
-      amount: transaction.amount,
-      paymentStatus: 'completed',
-      paymentReference: transaction.reference,
-      ...(generatedPin && { pin_number: generatedPin }),
-    });
-
-    return generatedPin;
-  } catch (error) {
-    console.error('Complete transaction error:', error);
-    throw error;
-  }
-}
-
 export const paystackWebhook = async (req, res) => {
   try {
     const secret = process.env.PAYSTACK_SECRET_KEY;
@@ -519,9 +471,21 @@ export const paystackWebhook = async (req, res) => {
         payment.paymentStatus = 'completed';
         payment.status = 'active';
         payment.startDate = new Date();
-        payment.endDate = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000); // Example for subscription of 30 days
+        // payment.endDate = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000); // Example for subscription of 30 days
         await payment.save();
       }
+
+      // Generate PIN (or complete transfer)
+      const generatedPin = await completeTransferTransaction(transaction);
+
+      // Respond with success and include PIN if generated
+      return res.json({
+        status: true,
+        reference: data.reference,
+        authorization_url: data.authorization_url,
+        access_code: data.access_code,
+        ...(generatedPin && { pin: generatedPin }),
+      });
     }
 
     console.log('Webhook processed successfully');
@@ -531,11 +495,3 @@ export const paystackWebhook = async (req, res) => {
     res.status(500).json({ error: 'Webhook processing failed' });
   }
 };
-
-function calculatePaystackSignature(secret, eventData) {
-  const hmac = crypto.createHmac('sha512', secret);
-  const expectedSignature = hmac
-    .update(JSON.stringify(eventData))
-    .digest('hex');
-  return expectedSignature === signature;
-}
