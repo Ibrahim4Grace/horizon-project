@@ -1,6 +1,6 @@
 import crypto from 'crypto';
 import { generateOTP } from '../utils/index.js';
-import { Payment, PurchaseHistory, PurchaseHistory } from '../models/index.js';
+import { Payment, PurchaseHistory } from '../models/index.js';
 
 export function calculatePaystackSignature(secret, eventData) {
   const hmac = crypto.createHmac('sha512', secret);
