@@ -1,6 +1,6 @@
 import crypto from 'crypto';
 import { generateOTP } from '../utils/index.js';
-import { Payment, PurchaseHistory } from '../models/index.js';
+import { Payment, PurchaseHistory, OTP } from '../models/index.js';
 
 export function calculatePaystackSignature(secret, eventData) {
   const hmac = crypto.createHmac('sha512', secret);
@@ -16,11 +16,16 @@ export async function completeTransferTransaction(transaction) {
     transaction.status = 'completed';
     await transaction.save();
 
-    // Generate PIN if this is a pin purchase
     let generatedPin = null;
     if (transaction.itemType === 'pin') {
-      const { otp } = await generateOTP();
-      generatedPin = otp;
+      let otpExists = true;
+      while (otpExists) {
+        const { otp } = await generateOTP();
+        otpExists = await OTP.exists({ otp });
+        if (!otpExists) {
+          generatedPin = otp;
+        }
+      }
     }
 
     // Create payment record
