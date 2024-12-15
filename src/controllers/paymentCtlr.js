@@ -431,7 +431,7 @@ export const paystackWebhook = async (req, res) => {
     // Verify Paystack signature
     if (
       !signature ||
-      signature !== calculatePaystackSignature(secret, req.body)
+      !calculatePaystackSignature(secret, req.body, signature) // Pass signature to the function
     ) {
       console.log('Invalid signature');
       return res.status(401).json({ error: 'Invalid signature' });
