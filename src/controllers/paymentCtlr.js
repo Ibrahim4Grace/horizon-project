@@ -423,41 +423,8 @@ export const paystackWebhook = asyncHandler(async (req, res) => {
   }
 });
 
-// export const paymentRedirect = asyncHandler(async (req, res) => {
-//   const reference = req.query.reference;
-
-//   if (!reference) {
-//     return res.redirect('/user/index?payment=failed');
-//   }
-
-//   try {
-//     // Verify transaction with Paystack
-//     const verifyUrl = `${process.env.PAYSTACK_BASE_URL}/transaction/verify/${reference}`;
-//     const response = await axios.get(verifyUrl, {
-//       headers: {
-//         Authorization: `Bearer ${process.env.PAYSTACK_SECRET_KEY}`,
-//       },
-//     });
-
-//     const transaction = response.data.data;
-
-//     // Check if the payment was successful
-//     if (transaction.status === 'success') {
-//       // Redirect to user page with success
-//       return res.redirect(`/user/index?payment=success&reference=${reference}`);
-//     } else {
-//       // Redirect to user page with failure
-//       return res.redirect('/user/index?payment=failed');
-//     }
-//   } catch (error) {
-//     console.error('Error verifying transaction:', error);
-//     return res.redirect('/user/index?payment=error');
-//   }
-// });
-
 export const paymentRedirect = asyncHandler(async (req, res) => {
   const reference = req.query.reference;
-  const user = req.currentUser; // Now this should be available from userMiddleware
 
   if (!reference) {
     return res.redirect('/user/index?payment=failed');
@@ -476,9 +443,6 @@ export const paymentRedirect = asyncHandler(async (req, res) => {
 
     // Check if the payment was successful
     if (transaction.status === 'success') {
-      // Here you can use req.currentUser safely
-      console.log('Payment successful for user:', user?.email);
-
       // Redirect to user page with success
       return res.redirect(`/user/index?payment=success&reference=${reference}`);
     } else {

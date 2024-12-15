@@ -33,22 +33,7 @@
             </div> 
 
           </div> 
-            <script>
-              window.addEventListener('DOMContentLoaded', () => {
-  const urlParams = new URLSearchParams(window.location.search);
-  const paymentStatus = urlParams.get('payment');
-  const reference = urlParams.get('reference');
-
-  if (paymentStatus === 'success') {
-    alert(`Payment Successful! Reference: ${reference}`);
-  } else if (paymentStatus === 'failed') {
-    alert('Payment Failed. Please try again.');
-  } else if (paymentStatus === 'error') {
-    alert('An error occurred during payment processing.');
-  }
-});
-
-            </script>
+            
 
         </div>
       </main>
