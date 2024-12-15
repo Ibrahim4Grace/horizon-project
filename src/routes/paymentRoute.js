@@ -37,8 +37,8 @@ paymentRouter.post(
 
 paymentRouter.get(
   '/redirect',
-  authMiddleware,
-  userMiddleware,
+  // authMiddleware,
+  // userMiddleware,
   paymentCtlr.paymentRedirect
 );
 
