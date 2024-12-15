@@ -16,9 +16,20 @@ export const authMiddleware = asyncHandler(async (req, res, next) => {
     ? '/auth/admin/login'
     : '/auth/user/login';
 
+  const isTrustedRedirect = req.originalUrl.includes('/payment/redirect');
+
   if (!accessToken) {
+    if (isTrustedRedirect) {
+      // Optionally log the event for monitoring
+      console.log('Bypassing auth for trusted redirect');
+      return next();
+    }
     return res.redirect(loginRedirectUrl);
   }
+
+  // if (!accessToken) {
+  //   return res.redirect(loginRedirectUrl);
+  // }
 
   try {
     const decodedAccessToken = jwt.verify(accessToken, config.accessToken);
