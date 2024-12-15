@@ -18,11 +18,7 @@
   
       <main class="h-full overflow-y-auto">
         <div class="container px-6 mx-auto grid">
-          <!-- <h2
-            class="my-6 text-2xl font-semibold text-gray-700 dark:text-gray-200"
-          >
-          Paystack Pay
-          </h2> -->
+    
           
        
     <div class="container mx-auto px-4 py-8">
@@ -35,40 +31,46 @@
   </div>
 
     <script>
-      async function handlePaymentSuccess() {
-          const urlParams = new URLSearchParams(window.location.search);
-          const reference = urlParams.get('reference');
+   async function handlePaymentSuccess() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const reference = urlParams.get('reference');
+    const token = urlParams.get('token');
 
-          if (!reference) {
-              displayError('No payment reference found');
-              return;
-          }
+    if (!reference) {
+      displayError('No payment reference found');
+      return;
+    }
 
-          try {
-              const response = await fetch(`/payment/verify/${reference}`, {
-                  method: 'GET',
-                  headers: {
-                      'Content-Type': 'application/json',
-                  },
-                  credentials: 'include',
-              });
+    // If token exists, set it back in the cookie
+    if (token) {
+      document.cookie = `jwt=${token}; path=/`;
+    }
 
-              const result = await response.json();
-              
-              if (result.status === 'success') {
-                  if (result.data.pin) {
-                      displaySuccessWithPin(result.data.pin, result.data.amount);
-                  } else {
-                      displaySuccess(result.data.amount);
-                  }
-              } else {
-                  displayError('Payment verification failed. Please contact support.');
-              }
-          } catch (error) {
-              console.error('Verification error:', error);
-              displayError('Unable to verify payment. Please contact support.');
-          }
+    try {
+      const response = await fetch(`/payment/verify/${reference}`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        credentials: 'include',
+      });
+
+      const result = await response.json();
+      
+      if (result.status === 'success') {
+        if (result.data.pin) {
+          displaySuccessWithPin(result.data.pin, result.data.amount);
+        } else {
+          displaySuccess(result.data.amount);
+        }
+      } else {
+        displayError('Payment verification failed. Please contact support.');
       }
+    } catch (error) {
+      console.error('Verification error:', error);
+      displayError('Unable to verify payment. Please contact support.');
+    }
+  }
 
       function displaySuccessWithPin(pin, amount) {
           const successDiv = document.getElementById('payment-result');

@@ -366,7 +366,7 @@ export const processPayment = async (req, res) => {
 
 export const verifyPayment = async (req, res) => {
   try {
-    const reference = req.query.reference;
+    const reference = req.params.reference;
     const transaction = await Transaction.findOne({ reference });
 
     if (!transaction) {
@@ -388,6 +388,20 @@ export const verifyPayment = async (req, res) => {
     const data = verification.data.data;
 
     if (data.status === 'success') {
+      // Update transaction status immediately
+      transaction.status = 'completed';
+      await transaction.save();
+
+      // Find and update payment status
+      const payment = await Payment.findOne({ paymentReference: reference });
+      if (payment) {
+        payment.status = 'active';
+        payment.paymentStatus = 'completed';
+        payment.startDate = new Date();
+        payment.endDate = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000);
+        await payment.save();
+      }
+
       // Complete the transaction with PIN generation
       const generatedPin = await completeTransferTransaction(transaction);
 
@@ -414,7 +428,6 @@ export const verifyPayment = async (req, res) => {
     });
   }
 };
-
 // Updated helper function to complete transfer transaction with PIN generation
 async function completeTransferTransaction(transaction) {
   try {
@@ -465,3 +478,63 @@ async function completeTransferTransaction(transaction) {
     throw error;
   }
 }
+
+// Helper to calculate Paystack signature
+function calculatePaystackSignature(secret, body) {
+  const crypto = require('crypto');
+  return crypto
+    .createHmac('sha512', secret)
+    .update(JSON.stringify(body))
+    .digest('hex');
+}
+
+export const paystackWebhook = async (req, res) => {
+  try {
+    const secret = process.env.PAYSTACK_SECRET_KEY;
+    const signature = req.headers['x-paystack-signature'];
+
+    // Verify Paystack signature
+    if (
+      !signature ||
+      signature !== calculatePaystackSignature(secret, req.body)
+    ) {
+      return res.status(401).json({ error: 'Invalid signature' });
+    }
+
+    const event = req.body.event;
+    const data = req.body.data;
+
+    if (event === 'charge.success') {
+      const reference = data.reference;
+
+      // Find and update the transaction
+      const transaction = await Transaction.findOne({ reference });
+
+      if (!transaction) {
+        return res.status(404).json({ error: 'Transaction not found' });
+      }
+
+      if (transaction.status !== 'pending') {
+        return res.status(400).json({ error: 'Transaction already processed' });
+      }
+
+      transaction.status = 'completed';
+      await transaction.save();
+
+      // Update associated payment
+      const payment = await Payment.findOne({ paymentReference: reference });
+      if (payment) {
+        payment.paymentStatus = 'completed';
+        payment.status = 'active';
+        payment.startDate = new Date();
+        payment.endDate = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000);
+        await payment.save();
+      }
+    }
+
+    res.status(200).json({ status: 'success' });
+  } catch (error) {
+    console.error('Webhook processing error:', error);
+    res.status(500).json({ error: 'Webhook processing failed' });
+  }
+};

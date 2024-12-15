@@ -38,4 +38,6 @@ paymentRouter.get(
   paymentCtlr.verifyPayment
 );
 
+paymentRouter.post('/webhook', paymentCtlr.paystackWebhook);
+
 export default paymentRouter;

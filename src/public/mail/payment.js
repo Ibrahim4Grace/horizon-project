@@ -512,21 +512,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
         // Redirect to the Paystack transfer URL if available
         if (result.authorization_url) {
-          window.location.href = result.authorization_url;
-
-          // // Get the current auth token from your cookies/storage
-          // const token = document.cookie
-          //   .split('; ')
-          //   .find((row) => row.startsWith('jwt='))
-          //   ?.split('=')[1];
-
-          // // Add both success_url and auth token to the URL
-          // const successUrl = new URL(result.authorization_url);
-          // successUrl.searchParams.append(
-          //   'success_url',
-          //   `${window.location.origin}/user/success?reference=${result.reference}&token=${token}`
-          // );
-          // window.location.href = successUrl.toString();
+          window.location.href = `${window.location.origin}/user/success?reference=${result.reference}`;
         } else {
           console.error('Invalid Paystack response:', result);
           throw new Error(
