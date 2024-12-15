@@ -416,7 +416,7 @@ export const processPayment = async (req, res) => {
 //     });
 //   }
 // };
-// // Updated helper function to complete transfer transaction with PIN generation
+
 // async function completeTransferTransaction(transaction) {
 //   try {
 //     // Update transaction status
@@ -467,53 +467,75 @@ export const processPayment = async (req, res) => {
 //   }
 // }
 
-// export const paystackWebhook = async (req, res) => {
-//   try {
-//     const secret = process.env.PAYSTACK_SECRET_KEY;
-//     const signature = req.headers['x-paystack-signature'];
+export const paystackWebhook = async (req, res) => {
+  try {
+    const secret = process.env.PAYSTACK_SECRET_KEY;
+    const signature = req.headers['x-paystack-signature'];
 
-//     // Verify Paystack signature
-//     if (
-//       !signature ||
-//       signature !== calculatePaystackSignature(secret, req.body)
-//     ) {
-//       return res.status(401).json({ error: 'Invalid signature' });
-//     }
+    console.log('Received webhook request:', req.body); // Log the incoming webhook data
+    console.log('Paystack Signature:', signature);
 
-//     const event = req.body.event;
-//     const data = req.body.data;
+    // Verify Paystack signature
+    if (
+      !signature ||
+      signature !== calculatePaystackSignature(secret, req.body)
+    ) {
+      console.log('Invalid signature');
+      return res.status(401).json({ error: 'Invalid signature' });
+    }
 
-//     if (event === 'charge.success') {
-//       const reference = data.reference;
+    const event = req.body.event;
+    const data = req.body.data;
 
-//       // Find and update the transaction
-//       const transaction = await Transaction.findOne({ reference });
+    console.log('Webhook event:', event); // Log the event type
+    console.log('Event data:', data); // Log event data
 
-//       if (!transaction) {
-//         return res.status(404).json({ error: 'Transaction not found' });
-//       }
+    if (event === 'charge.success') {
+      const reference = data.reference;
 
-//       if (transaction.status !== 'pending') {
-//         return res.status(400).json({ error: 'Transaction already processed' });
-//       }
+      console.log('Processing charge.success for reference:', reference);
 
-//       transaction.status = 'completed';
-//       await transaction.save();
+      // Find and update the transaction
+      const transaction = await Transaction.findOne({ reference });
 
-//       // Update associated payment
-//       const payment = await Payment.findOne({ paymentReference: reference });
-//       if (payment) {
-//         payment.paymentStatus = 'completed';
-//         payment.status = 'active';
-//         payment.startDate = new Date();
-//         payment.endDate = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000);
-//         await payment.save();
-//       }
-//     }
+      if (!transaction) {
+        console.log('Transaction not found:', reference);
+        return res.status(404).json({ error: 'Transaction not found' });
+      }
 
-//     res.status(200).json({ status: 'success' });
-//   } catch (error) {
-//     console.error('Webhook processing error:', error);
-//     res.status(500).json({ error: 'Webhook processing failed' });
-//   }
-// };
+      if (transaction.status !== 'pending') {
+        console.log('Transaction already processed:', reference);
+        return res.status(400).json({ error: 'Transaction already processed' });
+      }
+
+      console.log('Updating transaction to completed');
+      transaction.status = 'completed';
+      await transaction.save();
+
+      // Update associated payment
+      const payment = await Payment.findOne({ paymentReference: reference });
+      if (payment) {
+        console.log('Updating payment to completed');
+        payment.paymentStatus = 'completed';
+        payment.status = 'active';
+        payment.startDate = new Date();
+        payment.endDate = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000); // Example for subscription of 30 days
+        await payment.save();
+      }
+    }
+
+    console.log('Webhook processed successfully');
+    res.status(200).json({ status: 'success' });
+  } catch (error) {
+    console.error('Webhook processing error:', error);
+    res.status(500).json({ error: 'Webhook processing failed' });
+  }
+};
+
+function calculatePaystackSignature(secret, eventData) {
+  const hmac = crypto.createHmac('sha512', secret);
+  const expectedSignature = hmac
+    .update(JSON.stringify(eventData))
+    .digest('hex');
+  return expectedSignature === signature;
+}

@@ -30,4 +30,18 @@ paymentRouter.post(
   paymentCtlr.processPayment
 );
 
+// Verify card payment
+paymentRouter.get(
+  '/verify/:reference',
+  authMiddleware,
+  userMiddleware,
+  paymentCtlr.verifyPayment
+);
+
+paymentRouter.post(
+  '/webhook',
+  express.raw({ type: 'application/json' }),
+  paymentCtlr.paystackWebhook
+);
+
 export default paymentRouter;
