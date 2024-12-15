@@ -299,6 +299,7 @@ export const processPayment = async (req, res) => {
         amount: amount * 100,
         email: user.email,
         currency: 'NGN',
+        callback_url: `${process.env.PROD_BASE_URL}/payment/verify/${reference}`,
       };
 
       const response = await axios.post(
@@ -404,16 +405,7 @@ export const verifyPayment = async (req, res) => {
 
       // Complete the transaction with PIN generation
       const generatedPin = await completeTransferTransaction(transaction);
-
-      return res.json({
-        status: 'success',
-        message: 'Payment verified successfully',
-        data: {
-          reference,
-          amount: transaction.amount,
-          ...(generatedPin && { pin: generatedPin }),
-        },
-      });
+      res.redirect('/user/success');
     } else {
       return res.json({
         status: 'failed',
