@@ -17,8 +17,6 @@ import { ServerError, ResourceNotFound } from '../middlewares/index.js';
 
 import axios from 'axios';
 
-const PAYSTACK_BASE_URL = 'https://api.paystack.co';
-
 export const chargeCard = asyncHandler(async (req, res) => {
   // Create a lock key based on user and item
   const { courseId, pinId, card } = req.body;
@@ -43,19 +41,6 @@ export const chargeCard = asyncHandler(async (req, res) => {
     });
   }
 
-  console.log('Charge card request received:', {
-    body: {
-      ...req.body,
-      card: {
-        ...req.body.card,
-        number: '****' + req.body.card.number.slice(-4),
-        cvv: '***',
-      },
-    },
-  });
-
-  console.log('Looking up item:', { courseId, pinId });
-
   const item = courseId
     ? await Course.findById(courseId)
     : await Pin.findById(pinId);
@@ -68,7 +53,6 @@ export const chargeCard = asyncHandler(async (req, res) => {
   // Convert price to kobo (Paystack uses kobo)
   const priceInNaira = Number(item.price.toString().replace(/,/g, ''));
   const priceInKobo = priceInNaira * 100;
-  console.log('Price conversion:', { priceInNaira, priceInKobo });
 
   // Create initial payment record with pending status
   const initialPayment = await Payment.create({
@@ -299,11 +283,11 @@ export const processPayment = async (req, res) => {
         amount: amount * 100,
         email: user.email,
         currency: 'NGN',
-        callback_url: `${process.env.PROD_BASE_URL}/payment/verify/${reference}`,
+        callback_url: `${process.env.BASE_URL}/user/success`,
       };
 
       const response = await axios.post(
-        `${PAYSTACK_BASE_URL}/transaction/initialize`,
+        `${process.env.PAYSTACK_BASE_URL}/transaction/initialize`,
         paymentData,
         {
           headers: {
@@ -378,7 +362,7 @@ export const verifyPayment = async (req, res) => {
     }
 
     const verification = await axios.get(
-      `${PAYSTACK_BASE_URL}/transaction/verify/${reference}`,
+      `${process.env.PAYSTACK_BASE_URL}/transaction/verify/${reference}`,
       {
         headers: {
           Authorization: `Bearer ${process.env.PAYSTACK_SECRET_KEY}`,
@@ -405,7 +389,16 @@ export const verifyPayment = async (req, res) => {
 
       // Complete the transaction with PIN generation
       const generatedPin = await completeTransferTransaction(transaction);
-      res.redirect('/user/success');
+
+      return res.json({
+        status: 'success',
+        message: 'Payment verified successfully',
+        data: {
+          reference,
+          amount: transaction.amount,
+          ...(generatedPin && { pin: generatedPin }),
+        },
+      });
     } else {
       return res.json({
         status: 'failed',
@@ -471,25 +464,16 @@ async function completeTransferTransaction(transaction) {
   }
 }
 
-// Helper to calculate Paystack signature
-function calculatePaystackSignature(secret, body) {
-  const crypto = require('crypto');
-  return crypto
-    .createHmac('sha512', secret)
-    .update(JSON.stringify(body))
-    .digest('hex');
-}
-
 export const paystackWebhook = async (req, res) => {
   try {
     const secret = process.env.PAYSTACK_SECRET_KEY;
     const signature = req.headers['x-paystack-signature'];
 
+    // Verify Paystack signature
     if (
       !signature ||
       signature !== calculatePaystackSignature(secret, req.body)
     ) {
-      console.warn('Invalid signature detected');
       return res.status(401).json({ error: 'Invalid signature' });
     }
 
@@ -499,26 +483,29 @@ export const paystackWebhook = async (req, res) => {
     if (event === 'charge.success') {
       const reference = data.reference;
 
+      // Find and update the transaction
       const transaction = await Transaction.findOne({ reference });
-      if (!transaction || transaction.status !== 'pending') {
-        return res
-          .status(400)
-          .json({ error: 'Transaction not found or already processed' });
+
+      if (!transaction) {
+        return res.status(404).json({ error: 'Transaction not found' });
+      }
+
+      if (transaction.status !== 'pending') {
+        return res.status(400).json({ error: 'Transaction already processed' });
       }
 
       transaction.status = 'completed';
       await transaction.save();
 
+      // Update associated payment
       const payment = await Payment.findOne({ paymentReference: reference });
       if (payment) {
-        payment.status = 'active';
         payment.paymentStatus = 'completed';
+        payment.status = 'active';
         payment.startDate = new Date();
-        payment.endDate = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000); // 30 days
+        payment.endDate = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000);
         await payment.save();
       }
-
-      console.log('Payment successfully processed via webhook');
     }
 
     res.status(200).json({ status: 'success' });
