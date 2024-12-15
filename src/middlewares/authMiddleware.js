@@ -9,7 +9,6 @@ export const authMiddleware = asyncHandler(async (req, res, next) => {
   const accessToken =
     req.cookies.accessToken || req.headers.authorization?.split(' ')[1];
 
-  // Determine user type from request path
   const isAdminRoute =
     req.originalUrl.includes('/admin') ||
     req.originalUrl.includes('/auth/admin');

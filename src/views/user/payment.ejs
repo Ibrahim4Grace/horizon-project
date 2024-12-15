@@ -194,8 +194,8 @@
             <div class="container">
                 <div class="checkout-grid">
                   <div class="form-section">
-            
-                  <form id="paymentForm" data-url="/payment/charge-card" method="POST">
+
+                  <form id="paymentForm" data-url="/payment/process" method="POST">
                     <% if (pin) { %>
                       <input type="hidden" name="pinId" value="<%= pin._id %>">
                       <input type="hidden" name="amount" value="<%= pin.price %>">
@@ -204,37 +204,74 @@
                       <input type="hidden" name="amount" value="<%= course.price %>">
                     <% } %>
                   
-                    <div class="form-group">
-                      <label class="text-gray-700 dark:text-gray-200">Card Number</label>
-                      <span class="hint">Enter 16-digit card number</span>
-                      <div class="input-wrapper">
-                        <input type="text" name="cardNumber" class="input-field" placeholder="0000 0000 0000 0000" maxlength="19" required />
-                        <svg class="input-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+                    <!-- Payment Method Selection -->
+                    <div class="form-group mb-4">
+                      <label class="text-gray-700 dark:text-gray-200">Payment Method</label>
+                      <div class="flex space-x-4 mt-2">
+                        <label class="inline-flex items-center">
+                          <input type="radio" name="paymentMethod" value="card" class="form-radio" checked>
+                          <span class="ml-2">Card Payment</span>
+                        </label>
+                        <label class="inline-flex items-center">
+                          <input type="radio" name="paymentMethod" value="transfer" class="form-radio">
+                          <span class="ml-2">Bank Transfer</span>
+                        </label>
                       </div>
                     </div>
                   
-                    <div class="expiry-date">
+                    <!-- Card Payment Fields -->
+                    <div id="cardFields">
                       <div class="form-group">
-                        <label class="text-gray-700 dark:text-gray-200">Expiry Month</label>
-                        <input type="text" name="expiryMonth" class="input-field" placeholder="MM" maxlength="2" required />
+                        <label class="text-gray-700 dark:text-gray-200">Card Number</label>
+                        <span class="hint">Enter 16-digit card number</span>
+                        <div class="input-wrapper">
+                          <input type="text" name="cardNumber" class="input-field" placeholder="0000 0000 0000 0000" maxlength="19" />
+                          <svg class="input-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                            <polyline points="22 4 12 14.01 9 11.01"></polyline>
+                          </svg>
+                        </div>
                       </div>
+                  
+                      <div class="expiry-date">
+                        <div class="form-group">
+                          <label class="text-gray-700 dark:text-gray-200">Expiry Month</label>
+                          <input type="text" name="expiryMonth" class="input-field" placeholder="MM" maxlength="2" />
+                        </div>
+                        <div class="form-group">
+                          <label class="text-gray-700 dark:text-gray-200">Expiry Year</label>
+                          <input type="text" name="expiryYear" class="input-field" placeholder="YY" maxlength="2" />
+                        </div>
+                      </div>
+                  
                       <div class="form-group">
-                        <label class="text-gray-700 dark:text-gray-200">Expiry Year</label>
-                        <input type="text" name="expiryYear" class="input-field" placeholder="YY" maxlength="2" required />
+                        <label class="text-gray-700 dark:text-gray-200">CVV</label>
+                        <span class="hint">Enter 3-digit number from back of card</span>
+                        <div class="input-wrapper">
+                          <input type="password" name="cvv" class="input-field" placeholder="000" maxlength="4" id="cvv-input"/>
+                          <svg class="input-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" id="cvv-toggle-icon">
+                            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                            <circle cx="12" cy="12" r="3"></circle>
+                          </svg>
+                        </div>
                       </div>
                     </div>
                   
-                    <div class="form-group">
-                      <label class="text-gray-700 dark:text-gray-200">CVV</label>
-                      <span class="hint">Enter 3-digit number from back of card</span>
-                      <div class="input-wrapper">
-                        <input type="password" name="cvv" class="input-field" placeholder="000" maxlength="4" required />
-                        <svg class="input-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+                    <!-- Transfer Payment Instructions (initially hidden) -->
+                    <div id="transferFields" class="hidden">
+                      <div class="bg-gray-50 dark:bg-gray-800 p-4 rounded-lg">
+                        <p class="text-gray-700 dark:text-gray-200 mb-2">Please click "Generate Transfer Details" to get bank account details for your transfer.</p>
+                        <p class="text-sm text-gray-600 dark:text-gray-400">Once you complete the transfer, the system will automatically confirm your payment.</p>
                       </div>
                     </div>
                   
-                    <button type="submit" class="submit-button">Pay Now</button>
+                    <button type="submit" class="submit-button">
+                      <span class="card-text">Pay Now</span>
+                      <span class="transfer-text hidden">Generate Transfer Details</span>
+                    </button>
                   </form>
+
+
                   </div>
             
                   <div class="summary-section">
@@ -267,71 +304,85 @@
                       <% } %>
                     </div>
                   </div>
-                  
                 </div>
               </div>
+        </div>
+      </main>
+    </div>
+  </div>
 
-         <script>
-            /* COPY INPUT VALUES TO CARD MOCKUP */
+  <script src="../../mail/payment.js"></script>
+  <script>
+
+    // Select the input field and the icon
+const cvvInput = document.getElementById('cvv-input');
+const toggleIcon = document.getElementById('cvv-toggle-icon');
+
+// Add a click event to toggle visibility
+toggleIcon.addEventListener('click', () => {
+if (cvvInput.type === 'password') {
+cvvInput.type = 'text'; // Show CVV
+toggleIcon.style.stroke = 'blue'; 
+} else {
+cvvInput.type = 'password'; 
+toggleIcon.style.stroke = 'currentColor'; 
+}
+});
+
+    /* COPY INPUT VALUES TO CARD MOCKUP */
 const bounds = document.querySelectorAll("[data-bound]");
 
 for (let i = 0; i < bounds.length; i++) {
-  const targetId = bounds[i].getAttribute("data-bound");
-  const defValue = bounds[i].getAttribute("data-def");
-  const targetEl = document.getElementById(targetId);
-  bounds[i].addEventListener(
-    "blur",
-    () => (targetEl.innerText = bounds[i].value || defValue)
-  );
+const targetId = bounds[i].getAttribute("data-bound");
+const defValue = bounds[i].getAttribute("data-def");
+const targetEl = document.getElementById(targetId);
+bounds[i].addEventListener(
+"blur",
+() => (targetEl.innerText = bounds[i].value || defValue)
+);
 }
 
 /* TOGGLE CVC DISPLAY MODE */
 const cvc_toggler = document.getElementById("cvc_toggler");
 
 cvc_toggler.addEventListener("click", () => {
-  const target = cvc_toggler.getAttribute("data-target");
-  const el = document.getElementById(target);
-  el.setAttribute("type", el.type === "text" ? "password" : "text");
+const target = cvc_toggler.getAttribute("data-target");
+const el = document.getElementById(target);
+el.setAttribute("type", el.type === "text" ? "password" : "text");
 });
 
 function onlyNumberKey(evt) {
-  // Only ASCII character in that range allowed
-  var ASCIICode = evt.which ? evt.which : evt.keyCode;
-  if (ASCIICode > 31 && (ASCIICode < 48 || ASCIICode > 57)) return false;
-  return true;
+// Only ASCII character in that range allowed
+var ASCIICode = evt.which ? evt.which : evt.keyCode;
+if (ASCIICode > 31 && (ASCIICode < 48 || ASCIICode > 57)) return false;
+return true;
 }
 
 $(function () {
-  $("#cardNumber").on("keyup", function (e) {
-    var val = $(this).val();
-    var newval = "";
-    val = val.replace(/\s/g, "");
-    for (var i = 0; i < val.length; i++) {
-      if (i % 4 == 0 && i > 0) newval = newval.concat(" ");
-      newval = newval.concat(val[i]);
-    }
-    $(this).val(newval);
-  });
-
-  $(".year-own").datepicker({
-    minViewMode: 2,
-    format: "yy"
-  });
-
-  $(".month-own").datepicker({
-    format: "MM",
-    minViewMode: "months",
-    maxViewMode: "months",
-    startView: "months"
-  });
+$("#cardNumber").on("keyup", function (e) {
+var val = $(this).val();
+var newval = "";
+val = val.replace(/\s/g, "");
+for (var i = 0; i < val.length; i++) {
+if (i % 4 == 0 && i > 0) newval = newval.concat(" ");
+newval = newval.concat(val[i]);
+}
+$(this).val(newval);
 });
 
-         </script>
+$(".year-own").datepicker({
+minViewMode: 2,
+format: "yy"
+});
 
-        </div>
-      </main>
-    </div>
-  </div>
-  <script src="../../mail/payment.js"></script>
+$(".month-own").datepicker({
+format: "MM",
+minViewMode: "months",
+maxViewMode: "months",
+startView: "months"
+});
+});
+
+ </script>
 </body>
 </html>

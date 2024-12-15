@@ -22,4 +22,20 @@ paymentRouter.post(
   paymentCtlr.submitOtp
 );
 
+// Process payment (both card and transfer)
+paymentRouter.post(
+  '/initialize',
+  authMiddleware,
+  userMiddleware,
+  paymentCtlr.processPayment
+);
+
+// Verify card payment
+paymentRouter.get(
+  '/verify/:reference',
+  authMiddleware,
+  userMiddleware,
+  paymentCtlr.verifyPayment
+);
+
 export default paymentRouter;

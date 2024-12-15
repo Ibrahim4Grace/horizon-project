@@ -18,25 +18,114 @@
   
       <main class="h-full overflow-y-auto">
         <div class="container px-6 mx-auto grid">
-          <h2
+          <!-- <h2
             class="my-6 text-2xl font-semibold text-gray-700 dark:text-gray-200"
           >
           Paystack Pay
-          </h2>
+          </h2> -->
           
-          <div class="container">
-            <div class="row justify-content-center">
-                <div class="col-md-5">
-                    <div class="message-box _success">
-                         <i class="fa fa-check-circle" aria-hidden="true"></i>
-                        <h2 class="text-gray-700 dark:text-gray-200"> Your payment was successful </h2>
-                       <p class="text-gray-700 dark:text-gray-200"> Thank you for your payment. <br>
-                        You will shortly receive a confirmation email.</p>      
-                </div> 
-            </div> 
-        </div> 
-     
-      
+       
+    <div class="container mx-auto px-4 py-8">
+      <div id="payment-result" class="max-w-md mx-auto bg-white rounded-lg shadow p-6">
+          <div class="flex justify-center">
+              <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500"></div>
+              <p class="ml-2">Verifying payment...</p>
+          </div>
+      </div>
+  </div>
+
+    <script>
+      async function handlePaymentSuccess() {
+          const urlParams = new URLSearchParams(window.location.search);
+          const reference = urlParams.get('reference');
+
+          if (!reference) {
+              displayError('No payment reference found');
+              return;
+          }
+
+          try {
+              const response = await fetch(`/payment/verify/${reference}`, {
+                  method: 'GET',
+                  headers: {
+                      'Content-Type': 'application/json',
+                  },
+                  credentials: 'include',
+              });
+
+              const result = await response.json();
+              
+              if (result.status === 'success') {
+                  if (result.data.pin) {
+                      displaySuccessWithPin(result.data.pin, result.data.amount);
+                  } else {
+                      displaySuccess(result.data.amount);
+                  }
+              } else {
+                  displayError('Payment verification failed. Please contact support.');
+              }
+          } catch (error) {
+              console.error('Verification error:', error);
+              displayError('Unable to verify payment. Please contact support.');
+          }
+      }
+
+      function displaySuccessWithPin(pin, amount) {
+          const successDiv = document.getElementById('payment-result');
+          successDiv.innerHTML = `
+              <div class="text-center">
+                  <svg class="mx-auto h-12 w-12 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                  </svg>
+                  <h2 class="mt-4 text-2xl font-bold text-gray-900">Payment Successful!</h2>
+                  <p class="mt-2 text-gray-600">Amount paid: NGN ${amount.toLocaleString()}</p>
+                  <div class="mt-4 p-4 bg-gray-50 rounded-lg">
+                      <p class="text-sm text-gray-600">Your PIN:</p>
+                      <p class="mt-1 text-lg font-mono font-bold">${pin}</p>
+                      <p class="mt-2 text-sm text-gray-500">Please save this PIN securely.</p>
+                  </div>
+                  <a href="/user/dashboard" class="mt-6 inline-block px-6 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600">
+                      Return to Dashboard
+                  </a>
+              </div>
+          `;
+      }
+
+      function displaySuccess(amount) {
+          const successDiv = document.getElementById('payment-result');
+          successDiv.innerHTML = `
+              <div class="text-center">
+                  <svg class="mx-auto h-12 w-12 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                  </svg>
+                  <h2 class="mt-4 text-2xl font-bold text-gray-900">Payment Successful!</h2>
+                  <p class="mt-2 text-gray-600">Amount paid: NGN ${amount.toLocaleString()}</p>
+                  <a href="/user/dashboard" class="mt-6 inline-block px-6 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600">
+                      Return to Dashboard
+                  </a>
+              </div>
+          `;
+      }
+
+      function displayError(message) {
+          const errorDiv = document.getElementById('payment-result');
+          errorDiv.innerHTML = `
+              <div class="text-center">
+                  <svg class="mx-auto h-12 w-12 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                  </svg>
+                  <h2 class="mt-4 text-2xl font-bold text-gray-900">Payment Error</h2>
+                  <p class="mt-2 text-gray-600">${message}</p>
+                  <a href="/user/dashboard" class="mt-6 inline-block px-6 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600">
+                      Return to Dashboard
+                  </a>
+              </div>
+          `;
+      }
+
+      // Call handlePaymentSuccess when the page loads
+      document.addEventListener('DOMContentLoaded', handlePaymentSuccess);
+  </script>
  
       
     </div> 

@@ -3,6 +3,7 @@ import {
   Course,
   Pin,
   PurchaseHistory,
+  Transaction,
   User,
 } from '../models/index.js';
 import { config } from '../configs/index.js';
@@ -13,6 +14,10 @@ import {
   generateOTP,
 } from '../utils/index.js';
 import { ServerError, ResourceNotFound } from '../middlewares/index.js';
+
+import axios from 'axios';
+
+const PAYSTACK_BASE_URL = 'https://api.paystack.co';
 
 export const chargeCard = asyncHandler(async (req, res) => {
   // Create a lock key based on user and item
@@ -272,3 +277,191 @@ export const submitOtp = asyncHandler(async (req, res) => {
     throw new ServerError(error.message || 'OTP verification failed');
   }
 });
+
+// Process Payment
+
+export const processPayment = async (req, res) => {
+  const user = req.currentUser;
+  try {
+    const { paymentMethod, amount, pinId, courseId } = req.body;
+
+    if (!user?.email) {
+      return res.status(400).json({ error: 'User email is required' });
+    }
+
+    if (!amount) {
+      return res.status(400).json({ error: 'Amount is required' });
+    }
+
+    if (paymentMethod === 'transfer') {
+      // Initialize transfer payment with Paystack
+      const paymentData = {
+        amount: amount * 100,
+        email: user.email,
+        currency: 'NGN',
+      };
+
+      const response = await axios.post(
+        `${PAYSTACK_BASE_URL}/transaction/initialize`,
+        paymentData,
+        {
+          headers: {
+            Authorization: `Bearer ${process.env.PAYSTACK_SECRET_KEY}`,
+            'Content-Type': 'application/json',
+          },
+        }
+      );
+
+      const transfer = response.data;
+
+      if (!transfer.data?.reference) {
+        throw new Error('Invalid transfer response from Paystack');
+      }
+
+      // Create initial payment record with pending status
+      const payment = new Payment({
+        user: user._id,
+        itemId: pinId || courseId,
+        amount,
+        paymentStatus: 'pending',
+        status: 'inactive',
+        paymentReference: transfer.data.reference,
+      });
+      await payment.save();
+
+      // Store transaction reference
+      const transaction = new Transaction({
+        reference: transfer.data.reference,
+        userId: user._id,
+        amount,
+        type: 'transfer',
+        itemId: pinId || courseId,
+        itemType: pinId ? 'pin' : 'course',
+        status: 'pending',
+        paymentDetails: {
+          transfer_code: transfer.data.reference,
+          access_code: transfer.data.access_code,
+          authorization_url: transfer.data.authorization_url,
+        },
+      });
+      await transaction.save();
+
+      return res.json({
+        status: true,
+        reference: transfer.data.reference,
+        authorization_url: transfer.data.authorization_url,
+        access_code: transfer.data.access_code,
+      });
+    }
+  } catch (error) {
+    console.error('Payment processing error:', error);
+    const errorMessage =
+      error.response?.data?.message || 'Payment processing failed';
+    return res.status(500).json({
+      status: false,
+      error: errorMessage,
+    });
+  }
+};
+
+export const verifyPayment = async (req, res) => {
+  try {
+    const reference = req.query.reference;
+    const transaction = await Transaction.findOne({ reference });
+
+    if (!transaction) {
+      return res.status(404).json({
+        status: 'failed',
+        error: 'Transaction not found',
+      });
+    }
+
+    const verification = await axios.get(
+      `${PAYSTACK_BASE_URL}/transaction/verify/${reference}`,
+      {
+        headers: {
+          Authorization: `Bearer ${process.env.PAYSTACK_SECRET_KEY}`,
+        },
+      }
+    );
+
+    const data = verification.data.data;
+
+    if (data.status === 'success') {
+      // Complete the transaction with PIN generation
+      const generatedPin = await completeTransferTransaction(transaction);
+
+      return res.json({
+        status: 'success',
+        message: 'Payment verified successfully',
+        data: {
+          reference,
+          amount: transaction.amount,
+          ...(generatedPin && { pin: generatedPin }),
+        },
+      });
+    } else {
+      return res.json({
+        status: 'failed',
+        message: 'Payment verification failed',
+      });
+    }
+  } catch (error) {
+    console.error('Payment verification error:', error);
+    return res.status(500).json({
+      status: 'failed',
+      error: 'Payment verification failed',
+    });
+  }
+};
+
+// Updated helper function to complete transfer transaction with PIN generation
+async function completeTransferTransaction(transaction) {
+  try {
+    // Update transaction status
+    transaction.status = 'completed';
+    await transaction.save();
+
+    // Generate PIN if this is a pin purchase
+    let generatedPin = null;
+    if (transaction.itemType === 'pin') {
+      const { otp } = await generateOTP();
+      generatedPin = otp;
+    }
+
+    // Create payment record
+    const payment = new Payment({
+      user: transaction.userId,
+      status: 'active',
+      itemId: transaction.itemId,
+      paymentReference: transaction.reference,
+      amount: transaction.amount,
+      paymentStatus: 'completed',
+      paymentDetails: {
+        amount: transaction.amount,
+        channel: transaction.type,
+        paidAt: new Date(),
+        transactionDate: new Date(),
+      },
+    });
+    await payment.save();
+    payment.activatePayment();
+    await payment.save();
+
+    // Create purchase history with PIN if applicable
+    await PurchaseHistory.create({
+      user: transaction.userId,
+      [transaction.itemType]: transaction.itemId,
+      itemType: transaction.itemType,
+      amount: transaction.amount,
+      paymentStatus: 'completed',
+      paymentReference: transaction.reference,
+      ...(generatedPin && { pin_number: generatedPin }),
+    });
+
+    return generatedPin;
+  } catch (error) {
+    console.error('Complete transaction error:', error);
+    throw error;
+  }
+}

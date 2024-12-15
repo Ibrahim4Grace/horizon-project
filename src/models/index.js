@@ -6,3 +6,4 @@ export * from './course.js';
 export * from './pin.js';
 export * from './purchaseHistory.js';
 export * from './contact.js';
+export * from './transaction.js';
