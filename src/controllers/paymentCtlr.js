@@ -331,11 +331,14 @@ export const processPayment = async (req, res) => {
       });
       await transaction.save();
 
+      // Complete the transaction
+      const generatedPin = await completeTransferTransaction(transaction);
       return res.json({
         status: true,
         reference: transfer.data.reference,
         authorization_url: transfer.data.authorization_url,
         access_code: transfer.data.access_code,
+        ...(generatedPin && { pin: generatedPin }),
       });
     }
   } catch (error) {
@@ -349,168 +352,168 @@ export const processPayment = async (req, res) => {
   }
 };
 
-export const verifyPayment = async (req, res) => {
-  try {
-    const reference = req.params.reference;
-    const transaction = await Transaction.findOne({ reference });
+// export const verifyPayment = async (req, res) => {
+//   try {
+//     const reference = req.params.reference;
+//     const transaction = await Transaction.findOne({ reference });
 
-    if (!transaction) {
-      return res.status(404).json({
-        status: 'failed',
-        error: 'Transaction not found',
-      });
-    }
+//     if (!transaction) {
+//       return res.status(404).json({
+//         status: 'failed',
+//         error: 'Transaction not found',
+//       });
+//     }
 
-    const verification = await axios.get(
-      `${process.env.PAYSTACK_BASE_URL}/transaction/verify/${reference}`,
-      {
-        headers: {
-          Authorization: `Bearer ${process.env.PAYSTACK_SECRET_KEY}`,
-        },
-      }
-    );
+//     const verification = await axios.get(
+//       `${process.env.PAYSTACK_BASE_URL}/transaction/verify/${reference}`,
+//       {
+//         headers: {
+//           Authorization: `Bearer ${process.env.PAYSTACK_SECRET_KEY}`,
+//         },
+//       }
+//     );
 
-    const data = verification.data.data;
+//     const data = verification.data.data;
 
-    if (data.status === 'success') {
-      // Update transaction status immediately
-      transaction.status = 'completed';
-      await transaction.save();
+//     if (data.status === 'success') {
+//       // Update transaction status immediately
+//       transaction.status = 'completed';
+//       await transaction.save();
 
-      // Find and update payment status
-      const payment = await Payment.findOne({ paymentReference: reference });
-      if (payment) {
-        payment.status = 'active';
-        payment.paymentStatus = 'completed';
-        payment.startDate = new Date();
-        payment.endDate = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000);
-        await payment.save();
-      }
+//       // Find and update payment status
+//       const payment = await Payment.findOne({ paymentReference: reference });
+//       if (payment) {
+//         payment.status = 'active';
+//         payment.paymentStatus = 'completed';
+//         payment.startDate = new Date();
+//         payment.endDate = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000);
+//         await payment.save();
+//       }
 
-      // Complete the transaction with PIN generation
-      const generatedPin = await completeTransferTransaction(transaction);
+//       // Complete the transaction with PIN generation
+//       const generatedPin = await completeTransferTransaction(transaction);
 
-      return res.json({
-        status: 'success',
-        message: 'Payment verified successfully',
-        data: {
-          reference,
-          amount: transaction.amount,
-          ...(generatedPin && { pin: generatedPin }),
-        },
-      });
-    } else {
-      return res.json({
-        status: 'failed',
-        message: 'Payment verification failed',
-      });
-    }
-  } catch (error) {
-    console.error('Payment verification error:', error);
-    return res.status(500).json({
-      status: 'failed',
-      error: 'Payment verification failed',
-    });
-  }
-};
-// Updated helper function to complete transfer transaction with PIN generation
-async function completeTransferTransaction(transaction) {
-  try {
-    // Update transaction status
-    transaction.status = 'completed';
-    await transaction.save();
+//       return res.json({
+//         status: 'success',
+//         message: 'Payment verified successfully',
+//         data: {
+//           reference,
+//           amount: transaction.amount,
+//           ...(generatedPin && { pin: generatedPin }),
+//         },
+//       });
+//     } else {
+//       return res.json({
+//         status: 'failed',
+//         message: 'Payment verification failed',
+//       });
+//     }
+//   } catch (error) {
+//     console.error('Payment verification error:', error);
+//     return res.status(500).json({
+//       status: 'failed',
+//       error: 'Payment verification failed',
+//     });
+//   }
+// };
+// // Updated helper function to complete transfer transaction with PIN generation
+// async function completeTransferTransaction(transaction) {
+//   try {
+//     // Update transaction status
+//     transaction.status = 'completed';
+//     await transaction.save();
 
-    // Generate PIN if this is a pin purchase
-    let generatedPin = null;
-    if (transaction.itemType === 'pin') {
-      const { otp } = await generateOTP();
-      generatedPin = otp;
-    }
+//     // Generate PIN if this is a pin purchase
+//     let generatedPin = null;
+//     if (transaction.itemType === 'pin') {
+//       const { otp } = await generateOTP();
+//       generatedPin = otp;
+//     }
 
-    // Create payment record
-    const payment = new Payment({
-      user: transaction.userId,
-      status: 'active',
-      itemId: transaction.itemId,
-      paymentReference: transaction.reference,
-      amount: transaction.amount,
-      paymentStatus: 'completed',
-      paymentDetails: {
-        amount: transaction.amount,
-        channel: transaction.type,
-        paidAt: new Date(),
-        transactionDate: new Date(),
-      },
-    });
-    await payment.save();
-    payment.activatePayment();
-    await payment.save();
+//     // Create payment record
+//     const payment = new Payment({
+//       user: transaction.userId,
+//       status: 'active',
+//       itemId: transaction.itemId,
+//       paymentReference: transaction.reference,
+//       amount: transaction.amount,
+//       paymentStatus: 'completed',
+//       paymentDetails: {
+//         amount: transaction.amount,
+//         channel: transaction.type,
+//         paidAt: new Date(),
+//         transactionDate: new Date(),
+//       },
+//     });
+//     await payment.save();
+//     payment.activatePayment();
+//     await payment.save();
 
-    // Create purchase history with PIN if applicable
-    await PurchaseHistory.create({
-      user: transaction.userId,
-      [transaction.itemType]: transaction.itemId,
-      itemType: transaction.itemType,
-      amount: transaction.amount,
-      paymentStatus: 'completed',
-      paymentReference: transaction.reference,
-      ...(generatedPin && { pin_number: generatedPin }),
-    });
+//     // Create purchase history with PIN if applicable
+//     await PurchaseHistory.create({
+//       user: transaction.userId,
+//       [transaction.itemType]: transaction.itemId,
+//       itemType: transaction.itemType,
+//       amount: transaction.amount,
+//       paymentStatus: 'completed',
+//       paymentReference: transaction.reference,
+//       ...(generatedPin && { pin_number: generatedPin }),
+//     });
 
-    return generatedPin;
-  } catch (error) {
-    console.error('Complete transaction error:', error);
-    throw error;
-  }
-}
+//     return generatedPin;
+//   } catch (error) {
+//     console.error('Complete transaction error:', error);
+//     throw error;
+//   }
+// }
 
-export const paystackWebhook = async (req, res) => {
-  try {
-    const secret = process.env.PAYSTACK_SECRET_KEY;
-    const signature = req.headers['x-paystack-signature'];
+// export const paystackWebhook = async (req, res) => {
+//   try {
+//     const secret = process.env.PAYSTACK_SECRET_KEY;
+//     const signature = req.headers['x-paystack-signature'];
 
-    // Verify Paystack signature
-    if (
-      !signature ||
-      signature !== calculatePaystackSignature(secret, req.body)
-    ) {
-      return res.status(401).json({ error: 'Invalid signature' });
-    }
+//     // Verify Paystack signature
+//     if (
+//       !signature ||
+//       signature !== calculatePaystackSignature(secret, req.body)
+//     ) {
+//       return res.status(401).json({ error: 'Invalid signature' });
+//     }
 
-    const event = req.body.event;
-    const data = req.body.data;
+//     const event = req.body.event;
+//     const data = req.body.data;
 
-    if (event === 'charge.success') {
-      const reference = data.reference;
+//     if (event === 'charge.success') {
+//       const reference = data.reference;
 
-      // Find and update the transaction
-      const transaction = await Transaction.findOne({ reference });
+//       // Find and update the transaction
+//       const transaction = await Transaction.findOne({ reference });
 
-      if (!transaction) {
-        return res.status(404).json({ error: 'Transaction not found' });
-      }
+//       if (!transaction) {
+//         return res.status(404).json({ error: 'Transaction not found' });
+//       }
 
-      if (transaction.status !== 'pending') {
-        return res.status(400).json({ error: 'Transaction already processed' });
-      }
+//       if (transaction.status !== 'pending') {
+//         return res.status(400).json({ error: 'Transaction already processed' });
+//       }
 
-      transaction.status = 'completed';
-      await transaction.save();
+//       transaction.status = 'completed';
+//       await transaction.save();
 
-      // Update associated payment
-      const payment = await Payment.findOne({ paymentReference: reference });
-      if (payment) {
-        payment.paymentStatus = 'completed';
-        payment.status = 'active';
-        payment.startDate = new Date();
-        payment.endDate = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000);
-        await payment.save();
-      }
-    }
+//       // Update associated payment
+//       const payment = await Payment.findOne({ paymentReference: reference });
+//       if (payment) {
+//         payment.paymentStatus = 'completed';
+//         payment.status = 'active';
+//         payment.startDate = new Date();
+//         payment.endDate = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000);
+//         await payment.save();
+//       }
+//     }
 
-    res.status(200).json({ status: 'success' });
-  } catch (error) {
-    console.error('Webhook processing error:', error);
-    res.status(500).json({ error: 'Webhook processing failed' });
-  }
-};
+//     res.status(200).json({ status: 'success' });
+//   } catch (error) {
+//     console.error('Webhook processing error:', error);
+//     res.status(500).json({ error: 'Webhook processing failed' });
+//   }
+// };
