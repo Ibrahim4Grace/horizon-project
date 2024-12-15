@@ -512,7 +512,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
         // Redirect to the Paystack transfer URL if available
         if (result.authorization_url) {
-          window.location.href = `${window.location.origin}/user/success?reference=${result.reference}`;
+          window.location.href = result.authorization_url;
         } else {
           console.error('Invalid Paystack response:', result);
           throw new Error(

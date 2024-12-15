@@ -38,6 +38,10 @@ paymentRouter.get(
   paymentCtlr.verifyPayment
 );
 
-paymentRouter.post('/webhook', paymentCtlr.paystackWebhook);
+paymentRouter.post(
+  '/webhook',
+  express.raw({ type: 'application/json' }),
+  paymentCtlr.paystackWebhook
+);
 
 export default paymentRouter;

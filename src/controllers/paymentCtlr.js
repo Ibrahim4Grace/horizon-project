@@ -493,11 +493,11 @@ export const paystackWebhook = async (req, res) => {
     const secret = process.env.PAYSTACK_SECRET_KEY;
     const signature = req.headers['x-paystack-signature'];
 
-    // Verify Paystack signature
     if (
       !signature ||
       signature !== calculatePaystackSignature(secret, req.body)
     ) {
+      console.warn('Invalid signature detected');
       return res.status(401).json({ error: 'Invalid signature' });
     }
 
@@ -507,29 +507,26 @@ export const paystackWebhook = async (req, res) => {
     if (event === 'charge.success') {
       const reference = data.reference;
 
-      // Find and update the transaction
       const transaction = await Transaction.findOne({ reference });
-
-      if (!transaction) {
-        return res.status(404).json({ error: 'Transaction not found' });
-      }
-
-      if (transaction.status !== 'pending') {
-        return res.status(400).json({ error: 'Transaction already processed' });
+      if (!transaction || transaction.status !== 'pending') {
+        return res
+          .status(400)
+          .json({ error: 'Transaction not found or already processed' });
       }
 
       transaction.status = 'completed';
       await transaction.save();
 
-      // Update associated payment
       const payment = await Payment.findOne({ paymentReference: reference });
       if (payment) {
-        payment.paymentStatus = 'completed';
         payment.status = 'active';
+        payment.paymentStatus = 'completed';
         payment.startDate = new Date();
-        payment.endDate = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000);
+        payment.endDate = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000); // 30 days
         await payment.save();
       }
+
+      console.log('Payment successfully processed via webhook');
     }
 
     res.status(200).json({ status: 'success' });
