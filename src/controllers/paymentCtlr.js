@@ -335,13 +335,14 @@ export const processPayment = async (req, res) => {
 
       // Complete the transaction
       // const generatedPin = await completeTransferTransaction(transaction);
-      // return res.json({
-      //   status: true,
-      //   reference: transfer.data.reference,
-      //   authorization_url: transfer.data.authorization_url,
-      //   access_code: transfer.data.access_code,
-      //   ...(generatedPin && { pin: generatedPin }),
-      // });
+      return res.json({
+        status: true,
+        reference: transfer.data.reference,
+        authorization_url: transfer.data.authorization_url,
+        access_code: transfer.data.access_code,
+        // access_code: transfer.data.access_code,
+        // ...(generatedPin && { pin: generatedPin }),
+      });
     }
   } catch (error) {
     console.error('Payment processing error:', error);
