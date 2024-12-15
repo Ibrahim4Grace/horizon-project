@@ -31,12 +31,12 @@ paymentRouter.post(
 );
 
 // Verify card payment
-paymentRouter.get(
-  '/verify/:reference',
-  authMiddleware,
-  userMiddleware,
-  paymentCtlr.verifyPayment
-);
+// paymentRouter.get(
+//   '/verify/:reference',
+//   authMiddleware,
+//   userMiddleware,
+//   paymentCtlr.verifyPayment
+// );
 
 paymentRouter.post(
   '/webhook',
