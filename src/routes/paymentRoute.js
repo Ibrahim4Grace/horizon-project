@@ -22,7 +22,6 @@ paymentRouter.post(
   paymentCtlr.submitOtp
 );
 
-// Process payment (both card and transfer)
 paymentRouter.post(
   '/initialize',
   authMiddleware,
@@ -30,18 +29,17 @@ paymentRouter.post(
   paymentCtlr.processPayment
 );
 
-// Verify card payment
-// paymentRouter.get(
-//   '/verify/:reference',
-//   authMiddleware,
-//   userMiddleware,
-//   paymentCtlr.verifyPayment
-// );
-
 paymentRouter.post(
   '/webhook',
   express.raw({ type: 'application/json' }),
   paymentCtlr.paystackWebhook
+);
+
+paymentRouter.get(
+  '/redirect',
+  authMiddleware,
+  userMiddleware,
+  paymentCtlr.paymentRedirect
 );
 
 export default paymentRouter;

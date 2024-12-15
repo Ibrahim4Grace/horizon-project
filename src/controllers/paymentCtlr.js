@@ -264,9 +264,7 @@ export const submitOtp = asyncHandler(async (req, res) => {
   }
 });
 
-// Process Payment
-
-export const processPayment = async (req, res) => {
+export const processPayment = asyncHandler(async (req, res) => {
   const user = req.currentUser;
   try {
     const { paymentMethod, amount, pinId, courseId } = req.body;
@@ -280,12 +278,11 @@ export const processPayment = async (req, res) => {
     }
 
     if (paymentMethod === 'transfer') {
-      // Initialize transfer payment with Paystack
       const paymentData = {
         amount: amount * 100,
         email: user.email,
         currency: 'NGN',
-        callback_url: `${process.env.BASE_URL}/user/success`,
+        callback_url: `${process.env.PROD_BASE_URL}/payment/redirect`,
       };
 
       const response = await axios.post(
@@ -305,7 +302,6 @@ export const processPayment = async (req, res) => {
         throw new Error('Invalid transfer response from Paystack');
       }
 
-      // Create initial payment record with pending status
       const payment = new Payment({
         user: user._id,
         itemId: pinId || courseId,
@@ -316,7 +312,6 @@ export const processPayment = async (req, res) => {
       });
       await payment.save();
 
-      // Store transaction reference
       const transaction = new Transaction({
         reference: transfer.data.reference,
         userId: user._id,
@@ -333,15 +328,11 @@ export const processPayment = async (req, res) => {
       });
       await transaction.save();
 
-      // Complete the transaction
-      // const generatedPin = await completeTransferTransaction(transaction);
       return res.json({
         status: true,
         reference: transfer.data.reference,
         authorization_url: transfer.data.authorization_url,
         access_code: transfer.data.access_code,
-        // access_code: transfer.data.access_code,
-        // ...(generatedPin && { pin: generatedPin }),
       });
     }
   } catch (error) {
@@ -353,74 +344,9 @@ export const processPayment = async (req, res) => {
       error: errorMessage,
     });
   }
-};
+});
 
-// export const verifyPayment = async (req, res) => {
-//   try {
-//     const reference = req.params.reference;
-//     const transaction = await Transaction.findOne({ reference });
-
-//     if (!transaction) {
-//       return res.status(404).json({
-//         status: 'failed',
-//         error: 'Transaction not found',
-//       });
-//     }
-
-//     const verification = await axios.get(
-//       `${process.env.PAYSTACK_BASE_URL}/transaction/verify/${reference}`,
-//       {
-//         headers: {
-//           Authorization: `Bearer ${process.env.PAYSTACK_SECRET_KEY}`,
-//         },
-//       }
-//     );
-
-//     const data = verification.data.data;
-
-//     if (data.status === 'success') {
-//       // Update transaction status immediately
-//       transaction.status = 'completed';
-//       await transaction.save();
-
-//       // Find and update payment status
-//       const payment = await Payment.findOne({ paymentReference: reference });
-//       if (payment) {
-//         payment.status = 'active';
-//         payment.paymentStatus = 'completed';
-//         payment.startDate = new Date();
-//         payment.endDate = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000);
-//         await payment.save();
-//       }
-
-//       // Complete the transaction with PIN generation
-//       const generatedPin = await completeTransferTransaction(transaction);
-
-//       return res.json({
-//         status: 'success',
-//         message: 'Payment verified successfully',
-//         data: {
-//           reference,
-//           amount: transaction.amount,
-//           ...(generatedPin && { pin: generatedPin }),
-//         },
-//       });
-//     } else {
-//       return res.json({
-//         status: 'failed',
-//         message: 'Payment verification failed',
-//       });
-//     }
-//   } catch (error) {
-//     console.error('Payment verification error:', error);
-//     return res.status(500).json({
-//       status: 'failed',
-//       error: 'Payment verification failed',
-//     });
-//   }
-// };
-
-export const paystackWebhook = async (req, res) => {
+export const paystackWebhook = asyncHandler(async (req, res) => {
   try {
     const secret = process.env.PAYSTACK_SECRET_KEY;
     const signature = req.headers['x-paystack-signature'];
@@ -495,4 +421,36 @@ export const paystackWebhook = async (req, res) => {
     console.error('Webhook processing error:', error);
     res.status(500).json({ error: 'Webhook processing failed' });
   }
-};
+});
+
+export const paymentRedirect = asyncHandler(async (req, res) => {
+  const reference = req.query.reference;
+
+  if (!reference) {
+    return res.redirect('/user/index?payment=failed');
+  }
+
+  try {
+    // Verify transaction with Paystack
+    const verifyUrl = `${process.env.PAYSTACK_BASE_URL}/transaction/verify/${reference}`;
+    const response = await axios.get(verifyUrl, {
+      headers: {
+        Authorization: `Bearer ${process.env.PAYSTACK_SECRET_KEY}`,
+      },
+    });
+
+    const transaction = response.data.data;
+
+    // Check if the payment was successful
+    if (transaction.status === 'success') {
+      // Redirect to user page with success
+      return res.redirect(`/user/index?payment=success&reference=${reference}`);
+    } else {
+      // Redirect to user page with failure
+      return res.redirect('/user/index?payment=failed');
+    }
+  } catch (error) {
+    console.error('Error verifying transaction:', error);
+    return res.redirect('/user/index?payment=error');
+  }
+});
