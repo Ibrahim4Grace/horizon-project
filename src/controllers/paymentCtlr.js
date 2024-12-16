@@ -20,12 +20,10 @@ import { ServerError, ResourceNotFound } from '../middlewares/index.js';
 import axios from 'axios';
 
 export const chargeCard = asyncHandler(async (req, res) => {
-  // Create a lock key based on user and item
   const { courseId, pinId, card } = req.body;
   const user = req.currentUser;
   const itemId = courseId || pinId;
 
-  // First, check if there's a pending or completed payment for this user and item
   const existingTransaction = await Payment.findOne({
     user: user._id,
     itemId: itemId,
@@ -48,7 +46,6 @@ export const chargeCard = asyncHandler(async (req, res) => {
     : await Pin.findById(pinId);
 
   if (!item) {
-    console.error('Item not found:', { courseId, pinId });
     throw new ResourceNotFound('Item not found');
   }
 
@@ -56,7 +53,6 @@ export const chargeCard = asyncHandler(async (req, res) => {
   const priceInNaira = Number(item.price.toString().replace(/,/g, ''));
   const priceInKobo = priceInNaira * 100;
 
-  // Create initial payment record with pending status
   const initialPayment = await Payment.create({
     user: user._id,
     itemId: itemId,
@@ -118,7 +114,6 @@ export const chargeCard = asyncHandler(async (req, res) => {
       generatedPin = otp;
     }
 
-    // Create purchase history
     const purchaseHistoryData = {
       user: user._id,
       itemName: item.name,
@@ -168,7 +163,6 @@ export const chargeCard = asyncHandler(async (req, res) => {
       throw new Error(`Unexpected payment status: ${result.data.status}`);
     }
   } catch (error) {
-    // Clean up the initial payment record if anything fails
     await Payment.findByIdAndDelete(initialPayment._id);
     throw error;
   }
@@ -351,61 +345,42 @@ export const paystackWebhook = asyncHandler(async (req, res) => {
     const secret = process.env.PAYSTACK_SECRET_KEY;
     const signature = req.headers['x-paystack-signature'];
 
-    console.log('Received webhook request:', req.body); // Log the incoming webhook data
-    console.log('Paystack Signature:', signature);
-
-    // Verify Paystack signature
     if (
       !signature ||
-      !calculatePaystackSignature(secret, req.body, signature) // Pass signature to the function
+      !calculatePaystackSignature(secret, req.body, signature)
     ) {
-      console.log('Invalid signature');
       return res.status(401).json({ error: 'Invalid signature' });
     }
 
     const event = req.body.event;
     const data = req.body.data;
 
-    console.log('Webhook event:', event); // Log the event type
-    console.log('Event data:', data); // Log event data
-
     if (event === 'charge.success') {
       const reference = data.reference;
 
-      console.log('Processing charge.success for reference:', reference);
-
-      // Find and update the transaction
       const transaction = await Transaction.findOne({ reference });
 
       if (!transaction) {
-        console.log('Transaction not found:', reference);
         return res.status(404).json({ error: 'Transaction not found' });
       }
 
       if (transaction.status !== 'pending') {
-        console.log('Transaction already processed:', reference);
         return res.status(400).json({ error: 'Transaction already processed' });
       }
 
-      console.log('Updating transaction to completed');
       transaction.status = 'completed';
       await transaction.save();
 
-      // Update associated payment
       const payment = await Payment.findOne({ paymentReference: reference });
       if (payment) {
-        console.log('Updating payment to completed');
         payment.paymentStatus = 'completed';
         payment.status = 'active';
         payment.startDate = new Date();
-        // payment.endDate = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000); // Example for subscription of 30 days
         await payment.save();
       }
 
-      // Generate PIN (or complete transfer)
       const generatedPin = await completeTransferTransaction(transaction);
 
-      // Respond with success and include PIN if generated
       return res.json({
         status: true,
         reference: data.reference,
@@ -415,10 +390,8 @@ export const paystackWebhook = asyncHandler(async (req, res) => {
       });
     }
 
-    console.log('Webhook processed successfully');
     res.status(200).json({ status: 'success' });
   } catch (error) {
-    console.error('Webhook processing error:', error);
     res.status(500).json({ error: 'Webhook processing failed' });
   }
 });
@@ -431,7 +404,6 @@ export const paymentRedirect = asyncHandler(async (req, res) => {
   }
 
   try {
-    // Verify transaction with Paystack
     const verifyUrl = `${process.env.PAYSTACK_BASE_URL}/transaction/verify/${reference}`;
     const response = await axios.get(verifyUrl, {
       headers: {
@@ -441,12 +413,9 @@ export const paymentRedirect = asyncHandler(async (req, res) => {
 
     const transaction = response.data.data;
 
-    // Check if the payment was successful
     if (transaction.status === 'success') {
-      // Redirect to user page with success
       return res.redirect(`/user/index?payment=success&reference=${reference}`);
     } else {
-      // Redirect to user page with failure
       return res.redirect('/user/index?payment=failed');
     }
   } catch (error) {

@@ -35,11 +35,6 @@ paymentRouter.post(
   paymentCtlr.paystackWebhook
 );
 
-paymentRouter.get(
-  '/redirect',
-  // authMiddleware,
-  // userMiddleware,
-  paymentCtlr.paymentRedirect
-);
+paymentRouter.get('/redirect', paymentCtlr.paymentRedirect);
 
 export default paymentRouter;
