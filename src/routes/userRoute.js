@@ -77,6 +77,8 @@ userRoute.get(
   userCtlr.userCertificate
 );
 
+userRoute.get('/message', authMiddleware, userMiddleware, userCtlr.userMessage);
+
 userRoute.delete(
   '/signOut',
   authMiddleware,

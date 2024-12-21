@@ -203,7 +203,7 @@ export const contactSchema = z.object({
   name: z
     .string()
     .trim()
-    .min(1, 'Full nme is required')
+    .min(1, 'Full name is required')
     .transform(sanitizeInput),
   email: z.string().trim().min(1, 'Email is required').transform(sanitizeInput),
   message: z
@@ -245,5 +245,18 @@ export const updateadminSchema = z.object({
       return true;
     }, 'Password must include at least one uppercase letter, one lowercase letter, one number, and one special character')
 
+    .transform(sanitizeInput),
+});
+
+export const broadcastSchema = z.object({
+  subject: z
+    .string()
+    .trim()
+    .min(1, 'subject is required')
+    .transform(sanitizeInput),
+  message: z
+    .string()
+    .trim()
+    .min(1, 'message is required')
     .transform(sanitizeInput),
 });

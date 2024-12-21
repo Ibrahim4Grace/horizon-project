@@ -1,16 +1,25 @@
 import { Router } from 'express';
 import * as adminCtlr from '../controllers/index.js';
 import { authMiddleware, adminMiddleware } from '../middlewares/index.js';
-import { Course, Pin, User, PurchaseHistory, Admin } from '../models/index.js';
 import { validateData } from '../middlewares/index.js';
 import { paginatedResults } from '../utils/index.js';
 import { adminImage } from '../configs/index.js';
-
+import {
+  Course,
+  Pin,
+  User,
+  PurchaseHistory,
+  Admin,
+  ContactUs,
+  BroadCastMessage,
+} from '../models/index.js';
 import {
   courseSchema,
   pinSchema,
   adminRegisterSchema,
   updateadminSchema,
+  contactSchema,
+  broadcastSchema,
 } from '../schemas/index.js';
 
 const adminRoute = Router();
@@ -120,6 +129,53 @@ adminRoute.delete(
   adminMiddleware,
   adminCtlr.deleteStudent
 );
+
+adminRoute.get(
+  '/inbox-message',
+  authMiddleware,
+  adminMiddleware,
+  paginatedResults(ContactUs),
+  adminCtlr.inboxMessage
+);
+
+adminRoute.post(
+  '/inbox-message',
+  authMiddleware,
+  adminMiddleware,
+  validateData(contactSchema),
+  adminCtlr.replyInboxMessage
+);
+
+adminRoute.delete(
+  '/inbox-message/:contactId',
+  authMiddleware,
+  adminMiddleware,
+  adminCtlr.deleteContact
+);
+
+adminRoute.get(
+  '/sent-message',
+  authMiddleware,
+  adminMiddleware,
+  paginatedResults(BroadCastMessage),
+  adminCtlr.sentMessage
+);
+
+adminRoute.post(
+  '/sent-message',
+  authMiddleware,
+  adminMiddleware,
+  validateData(broadcastSchema),
+  adminCtlr.broadcastMessage
+);
+
+adminRoute.delete(
+  '/sent-message/:broadcastId',
+  authMiddleware,
+  adminMiddleware,
+  adminCtlr.deleteBroadcastMessage
+);
+
 adminRoute.delete(
   '/signOut',
   authMiddleware,

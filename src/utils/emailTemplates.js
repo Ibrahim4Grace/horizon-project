@@ -102,8 +102,22 @@ export const contactUsFeedBack = (newContactUs) => ({
   subject: `Thank you for reaching out to us!`,
   html: `
      <p>Dear  ${newContactUs.name},</p>
-  <p>We truly appreciate you taking the time to contact us regarding your inquiry. Your message has been received, and we will make sure to address it promptly.</p>
+   <p>We truly appreciate you taking the time to contact us regarding your inquiry. Your message has been received, and our team will get back to you shortly.</p>
     <p>Best regards,<br>The Horznet Team</p>
+  `,
+});
+
+export const contactUsReply = (newContactUs) => ({
+  from: config.nodemailerEmail,
+  to: newContactUs.email,
+  subject: `Re: Your Inquiry to Hornet`,
+  html: `
+    <p>Dear User,</p>
+    <p>Thank you for your patience. We're following up on your inquiry regarding your message.</p>
+    <p>Here's our response:</p>
+    <p>${newContactUs.message}</p>
+    <p>If you have any further questions, please don't hesitate to contact us.</p>
+    <p>Best regards,<br>The Hornet Team</p>
   `,
 });
 
@@ -143,6 +157,16 @@ export const updateAdminProfile = (admin, updatedAdmin) => ({
     </ul>
 
     <p>Thank you for keeping your account secure!</p>
+    <p>Best regards,<br>The Horznet Team</p>
+  `,
+});
+
+export const sendBroadcastTemplate = (broadcastMsg) => ({
+  from: config.nodemailerEmail,
+  subject: broadcastMsg.subject,
+  html: `
+    <p>Dear User,</p>
+    <p>${broadcastMsg.message}</p>
     <p>Best regards,<br>The Horznet Team</p>
   `,
 });

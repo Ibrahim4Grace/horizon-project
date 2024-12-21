@@ -266,6 +266,11 @@ export const userCertificate = (req, res) => {
   res.render('user/certificate', { user });
 };
 
+export const userMessage = (req, res) => {
+  const user = req.currentUser;
+  res.render('user/message', { user });
+};
+
 export const userLogout = asyncHandler(async (req, res) => {
   const logoutRedirectUrl = '/auth/user/login';
   res.clearCookie('accessToken', '', {

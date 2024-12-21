@@ -1,8 +1,23 @@
 import { asyncHandler } from '../utils/asyncHandler.js';
-import { User, Course, Pin, PurchaseHistory, Admin } from '../models/index.js';
 import { cloudinary } from '../configs/index.js';
-import { newAdmin, sendMail, updateAdminProfile } from '../utils/index.js';
+import { config } from '../configs/index.js';
+import {
+  newAdmin,
+  sendMail,
+  updateAdminProfile,
+  contactUsReply,
+  sendBroadcastTemplate,
+} from '../utils/index.js';
 import { ResourceNotFound } from '../middlewares/index.js';
+import {
+  User,
+  Course,
+  Pin,
+  PurchaseHistory,
+  Admin,
+  ContactUs,
+  BroadCastMessage,
+} from '../models/index.js';
 
 export const adminIndex = asyncHandler(async (req, res) => {
   const admin = req.currentAdmin;
@@ -415,6 +430,158 @@ export const deleteStudent = asyncHandler(async (req, res) => {
     success: true,
     admin,
     message: 'User deleted successfully',
+  });
+});
+
+export const inboxMessage = (req, res) => {
+  const admin = req.currentAdmin;
+  const { results, currentPage, totalPages, limit } = res.paginatedResults;
+
+  res.render('admin/inbox-message', {
+    admin,
+    allcontact: results,
+    currentPage,
+    totalPages,
+    limit,
+  });
+};
+
+export const replyInboxMessage = asyncHandler(async (req, res) => {
+  const admin = req.currentAdmin;
+
+  const { email, name, message } = req.body;
+
+  const newContactUs = new ContactUs({
+    email,
+    name,
+    message,
+    adminId: admin,
+  });
+  await newContactUs.save();
+
+  const emailContent = contactUsReply(newContactUs);
+  await sendMail(emailContent);
+  const redirectUrl = '/admin/inbox-message';
+
+  res.status(200).json({ redirectUrl, message: 'Message sent successfully' });
+});
+
+export const deleteContact = asyncHandler(async (req, res) => {
+  const admin = req.currentAdmin;
+  const contactId = await ContactUs.findById(req.params.contactId);
+
+  if (!contactId) {
+    throw new ResourceNotFound('Message not found.');
+  }
+  await ContactUs.findByIdAndDelete(req.params.contactId);
+  const redirectUrl = '/admin/inbox-message';
+  res.status(201).json({
+    redirectUrl,
+    success: true,
+    admin,
+    message: 'Message deleted successfully',
+  });
+});
+
+export const sentMessage = (req, res) => {
+  const admin = req.currentAdmin;
+  const { results, currentPage, totalPages, limit } = res.paginatedResults;
+
+  res.render('admin/sent-message', {
+    admin,
+    allBroadcastMessage: results,
+    currentPage,
+    totalPages,
+    limit,
+  });
+};
+
+export const broadcastMessage = asyncHandler(async (req, res) => {
+  const { subject, message } = req.body;
+  const admin = req.currentAdmin;
+
+  // Get all user emails from database
+  const users = await User.find({}, 'email');
+  const recipients = users.map((user) => user.email).filter((email) => email);
+
+  if (recipients.length === 0) {
+    return res.status(400).json({
+      error: 'No recipients found in the database',
+    });
+  }
+
+  const broadcastMsg = new BroadCastMessage({
+    to: recipients,
+    subject,
+    message,
+    adminId: admin._id,
+  });
+  await broadcastMsg.save();
+
+  const emailTemplate = sendBroadcastTemplate(broadcastMsg);
+
+  // Send in batches
+  const BATCH_SIZE = 50;
+  const batches = [];
+  for (let i = 0; i < recipients.length; i += BATCH_SIZE) {
+    batches.push(recipients.slice(i, i + BATCH_SIZE));
+  }
+
+  let successCount = 0;
+  let failureCount = 0;
+
+  for (const batch of batches) {
+    const mailOptions = {
+      ...emailTemplate,
+      to: config.nodemailerEmail,
+      bcc: batch,
+    };
+
+    try {
+      await sendMail(mailOptions);
+      successCount += batch.length;
+    } catch (error) {
+      console.error(`Failed to send to batch: ${error.message}`);
+      failureCount += batch.length;
+      continue;
+    }
+
+    if (batches.length > 1) {
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+    }
+  }
+
+  const redirectUrl = '/admin/sent-message';
+  let successMessage = '';
+
+  if (successCount === recipients.length) {
+    successMessage = `Message sent successfully to ${successCount} recipients`;
+  } else if (successCount > 0) {
+    successMessage = `Partially successful: Sent to ${successCount} out of ${recipients.length} recipients`;
+  } else {
+    throw new Error('Failed to send any emails');
+  }
+
+  res.status(200).json({
+    redirectUrl,
+    message: successMessage,
+  });
+});
+
+export const deleteBroadcastMessage = asyncHandler(async (req, res) => {
+  const admin = req.currentAdmin;
+  const broadcastId = await BroadCastMessage.findById(req.params.broadcastId);
+
+  if (!broadcastId) {
+    throw new ResourceNotFound('Message not found.');
+  }
+  await BroadCastMessage.findByIdAndDelete(req.params.broadcastId);
+  const redirectUrl = '/admin/sent-message';
+  res.status(201).json({
+    redirectUrl,
+    success: true,
+    admin,
+    message: 'Message deleted successfully',
   });
 });
 

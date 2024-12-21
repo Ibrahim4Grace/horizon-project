@@ -2,17 +2,18 @@ import mongoose from 'mongoose';
 
 const contactUsSchema = new mongoose.Schema(
   {
+    adminId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Admin',
+    },
     name: {
       type: String,
-      required: true,
     },
     email: {
       type: String,
-      required: true,
     },
     message: {
       type: String,
-      required: true,
     },
   },
   {
