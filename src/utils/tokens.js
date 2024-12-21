@@ -7,11 +7,6 @@ export const generateTokensAndSetCookies = (res, userId) => {
     throw new Error('Invalid userId format');
   }
 
-  console.log('Config secrets:', {
-    accessToken: config.accessToken,
-    refreshToken: config.refreshToken,
-  });
-
   const accessToken = jwt.sign({ id: userId }, config.accessToken, {
     expiresIn: config.accessExpireTime,
   });
