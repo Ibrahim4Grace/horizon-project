@@ -377,6 +377,24 @@ export const paystackWebhook = asyncHandler(async (req, res) => {
         payment.status = 'active';
         payment.startDate = new Date();
         await payment.save();
+
+        // Add Find the purchase history
+        const purchaseHistory = await PurchaseHistory.findOne({
+          paymentReference: reference,
+        });
+
+        if (purchaseHistory) {
+          // Generate PIN only for pin purchases
+          if (metadata.item_type === 'pin') {
+            const { otp } = await generateOTP();
+            purchaseHistory.pin_number = otp;
+            purchaseHistory.paymentStatus = 'completed';
+            await purchaseHistory.save();
+          } else {
+            purchaseHistory.paymentStatus = 'completed';
+            await purchaseHistory.save();
+          }
+        }
       }
 
       const generatedPin = await completeTransferTransaction(transaction);
