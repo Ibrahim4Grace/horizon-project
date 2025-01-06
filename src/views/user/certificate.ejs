@@ -1,51 +1,6 @@
 
 <%- include (`../partials/userHtmlTag`); -%>
-<head>
 
-  <style>
-    
-/* .fullName{ font-family: 'Forte', cursive;font-size: 32px;color: #333; margin-top: 206px; }
-.completedCourse{font-size: 20px; color: #000;margin: 20px 0;}
-.courseInterest{ font-family: 'Forte', cursive; font-size: 32px;color: #333;margin-top: 206px; } */
-
-.fullName {
-  font-family: 'Forte', cursive;
-  font-size: 32px;
-  color: #333;
-  position: absolute; /* Independent positioning */
-  top: 360px; /* Adjust to align the name */
-  left: 50%; /* Center horizontally */
-  transform: translateX(-50%); /* Center alignment fix */
-}
-
-
-.courseInterest {
-  font-family: 'Forte', cursive;
-  font-size: 32px;
-  color: #333;
-  position: absolute; 
-  top: 424px; 
-  left: 50%; 
-  transform: translateX(-50%);
-}
-
-
-@media (max-width: 768px) {
-  .fullName  {
-    font-size: 21px; /* Smaller font for smaller screens */
-    top: 37px;
-    margin-top: 76px;
-  }
-  .courseInterest {
-    font-size: 21px; /* Smaller font for smaller screens */
-    top: 59px;
-    margin-top: 76px;
-  }
-}
-
-  </style>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
-</head>
 
 <body>
   <div
@@ -64,59 +19,8 @@
             Certificate of Completion
           </h2>
       
-          <% if (user) { %>
-            <div class="certificate-container" style="position: relative; width: 100%; max-width: 1000px; margin: 0 auto;">
-              <!-- Certificate Background Image -->
-              <img
-                src="../assets/img/certificate.jpg"
-                alt="Certificate"
-                style="width: 100%; height: auto;"
-              >
-      
-              <!-- Text Overlay -->
-              <div class="certificate-content" style="
-                position: absolute;
-                top: 0;
-                left: 0;
-                right: 0;
-                bottom: 0;
-                padding: 20px;
-                pointer-events: none; /* Prevent interaction with overlay */
-              ">
-                <!-- User's Name -->
-                <h1 class="fullName">
-                  <%= full_name %>
-                </h1>
-      
-       
-      
-                <!-- Course Name -->
-                <h2 class="courseInterest">
-                  <%= course_interest %>
-                </h2>
-              </div>
-            </div>
-      
-            <!-- Print Button -->
-            <div style="text-align: center; margin-top: 20px;">
-              <button
-                onclick="window.print()"
-                style="
-                  padding: 10px 20px;
-                  font-size: 16px;
-                  background-color: #4caf50;
-                  color: white;
-                  border: none;
-                  border-radius: 5px;
-                  cursor: pointer;
-                "
-              >
-                Print Certificate
-              </button>
-            </div>
-          <% } else { %>
-            <p>Your certificate is locked. Please contact admin to unlock it.</p>
-          <% } %>
+     
+  
         </div>
       </main>
       
