@@ -2,7 +2,11 @@ import { asyncHandler } from '../utils/asyncHandler.js';
 import { User, Course, Pin, PurchaseHistory } from '../models/index.js';
 import bcrypt from 'bcryptjs';
 import { cloudinary } from '../configs/index.js';
-import { ResourceNotFound, BadRequest } from '../middlewares/index.js';
+import {
+  ResourceNotFound,
+  Forbidden,
+  BadRequest,
+} from '../middlewares/index.js';
 import { updateProfile, sendMail } from '../utils/index.js';
 
 export const userIndex = asyncHandler(async (req, res) => {
@@ -110,9 +114,9 @@ export const purchasePin = asyncHandler(async (req, res) => {
 
 export const purchaseCourse = asyncHandler(async (req, res) => {
   const user = req.currentUser;
+
   const courses = await Course.find({}).select('name duration price').lean();
 
-  // Check if user has a valid pin
   const validPin = await PurchaseHistory.findOne({
     user: user._id,
     itemType: 'pin',
@@ -120,7 +124,6 @@ export const purchaseCourse = asyncHandler(async (req, res) => {
     pin_number: { $exists: true, $ne: 'Pending' },
   }).lean();
 
-  // Get user's purchased courses
   const purchasedCourses = await PurchaseHistory.find({
     user: user._id,
     itemType: 'course',
@@ -131,10 +134,12 @@ export const purchaseCourse = asyncHandler(async (req, res) => {
 
   const purchasedCourseIds = purchasedCourses.map((ph) => ph.course.toString());
 
-  // Add isPurchased flag to each course
+  // Apply user-specific pricing
   const coursesWithPurchaseStatus = courses.map((course) => ({
     ...course,
     isPurchased: purchasedCourseIds.includes(course._id.toString()),
+    displayPrice: user.appliedDiscount ? 27500 : course.price,
+    hasDiscount: user.appliedDiscount,
   }));
 
   const hasValidPin = !!validPin;
@@ -263,7 +268,18 @@ export const userCourseware = (req, res) => {
 
 export const userCertificate = (req, res) => {
   const user = req.currentUser;
-  res.render('user/certificate', { user });
+
+  if (!user.certificateUnlocked) {
+    throw new Forbidden('Certificate is locked. Contact admin to unlock it.');
+  }
+
+  res.render('user/certificate', {
+    user,
+    full_name: user.full_name,
+    course_interest: user.course_interest,
+  });
+
+  // res.render('user/certificate', { user });
 };
 
 export const userMessage = (req, res) => {

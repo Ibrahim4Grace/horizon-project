@@ -20,14 +20,20 @@ import {
   loginNotification,
 } from '../utils/index.js';
 
-//register
 export class authService {
   async register(userData, Model) {
-    const { email } = userData;
-    const existingUser = await Model.findOne({ email });
+    const { email, promocode } = userData;
 
+    const existingUser = await Model.findOne({ email });
     if (existingUser) {
       throw new Conflict('Email already registered!');
+    }
+
+    // Validate promocode
+    const validPromocodes = ['onoyakebet9ja', 'osha', 'ojo'];
+    if (promocode && validPromocodes.includes(promocode.toLowerCase())) {
+      userData.appliedDiscount = true;
+      userData.promocode = promocode;
     }
 
     const newUser = new Model(userData);

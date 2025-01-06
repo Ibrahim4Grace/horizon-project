@@ -40,6 +40,8 @@ export const registerSchema = z.object({
     .min(1, 'Phone number is required')
     .transform(sanitizeInput),
 
+  promocode: z.string().trim().optional(),
+
   password: z
     .string()
     .min(8)

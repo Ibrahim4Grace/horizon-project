@@ -299,6 +299,28 @@ export const purchase = asyncHandler(async (req, res) => {
   });
 });
 
+export const certificate = asyncHandler(async (req, res) => {
+  const admin = req.currentAdmin;
+
+  const users = await User.find();
+
+  res.render('admin/certificate', { admin, users: JSON.stringify(users) });
+});
+
+export const unlockCertificate = asyncHandler(async (req, res) => {
+  const { userId } = req.body;
+
+  const user = await User.findById(userId);
+  if (!user) {
+    return res.status(404).send('User not found');
+  }
+
+  user.certificateUnlocked = true;
+  await user.save();
+
+  res.status(200).send('Certificate unlocked successfully');
+});
+
 export const setting = (req, res) => {
   const admin = req.currentAdmin;
   res.render('admin/setting', { admin });

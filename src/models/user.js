@@ -11,9 +11,18 @@ const userSchema = new mongoose.Schema(
     phone_number: { type: String, trim: true },
     home_address: { type: String, trim: true },
     password: { type: String, select: false },
+    promocode: {
+      type: String,
+      trim: true,
+    },
+    appliedDiscount: {
+      type: Boolean,
+      default: false,
+    },
     dob: { type: String, trim: true },
     image: { imageId: String, imageUrl: String },
     isEmailVerified: { type: Boolean, default: false },
+    certificateUnlocked: { type: Boolean, default: true },
   },
   {
     timestamps: true,

@@ -25,16 +25,21 @@ export const registerUser = asyncHandler(async (req, res) => {
     class_option: req.body.class_option,
     phone_number: req.body.phone_number,
     password: req.body.password,
+    promocode: req.body.promocode,
     role: 'User',
   };
 
-  await authServiceInstance.register(userData, User);
+  const user = await authServiceInstance.register(userData, User);
   const redirectUrl = '/auth/user/verify-otp';
+
+  const message = user.appliedDiscount
+    ? 'Registration successful with promocode discount applied. Please verify your email.'
+    : 'Registration successful. Please verify your email.';
 
   res.status(201).json({
     redirectUrl,
     success: true,
-    message: 'Registration successful. Please verify your email.',
+    message,
   });
 });
 

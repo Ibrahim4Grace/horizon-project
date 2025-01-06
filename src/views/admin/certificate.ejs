@@ -1,0 +1,99 @@
+
+<%- include (`../partials/adminHtmlTag`); -%>
+<body>
+  <div
+    class="flex h-screen bg-gray-50 dark:bg-gray-900"
+    :class="{ 'overflow-hidden': isSideMenuOpen }"
+  >
+
+    <%- include (`../partials/adminSidebar`); -%>
+
+    <div class="flex flex-col flex-1 w-full">
+      <%- include (`../partials/adminHeader`); -%>
+  
+      <main class="h-full overflow-y-auto">
+        <div class="container px-6 mx-auto grid">
+          <h2
+            class="my-6 text-2xl font-semibold text-gray-700 dark:text-gray-200"
+          >
+          Certificate Management
+          </h2>
+
+        
+       <!-- Student List -->
+       <div class="bg-white rounded-lg shadow overflow-hidden">
+        <div class="divide-y divide-gray-200" id="studentList">
+            <!-- Student entries will be inserted here -->
+        </div>
+    </div>
+
+
+
+
+        </div>
+      </main>
+    </div>
+  </div>
+
+<script>
+
+    const users = JSON.parse('<%- users %>');
+
+    function createUserEntry(user) {
+        return `
+            <div class="p-4 flex items-center justify-between">
+                <div>
+                    <p class="font-medium">${user.full_name}</p>
+                    <p class="text-sm text-gray-500">${user.course_interest}</p>
+                </div>
+                <button 
+                    onclick="toggleCertificate('${user._id}')"
+                    class="px-4 py-2 rounded ${
+                        user.isUnlocked
+                            ? 'bg-gray-200 text-gray-500'
+                            : 'bg-green-600 text-white hover:bg-green-700'
+                    }"
+                >
+                    ${user.isUnlocked ? 'Unlocked' : 'Unlock Certificate'}
+                </button>
+            </div>
+        `;
+    }
+
+    function toggleCertificate(userId) {
+        // Here you would make an API call to your backend to toggle the certificate state
+        // For now, we're just toggling the state locally
+        const user = users.find(u => u._id === userId);
+        if (user) {
+            user.isUnlocked = !user.isUnlocked;
+            renderUserList();
+        }
+    }
+
+    function renderUserList() {
+        const listContainer = document.getElementById('studentList');
+        listContainer.innerHTML = users.map(createUserEntry).join('');
+    }
+
+    // Initial render
+    renderUserList();
+  
+</script>
+<!-- 
+<button onclick="unlockCertificate('<%= user._id %>')">Unlock Certificate</button>
+
+<script>
+  function unlockCertificate(userId) {
+    fetch('/admin/unlock-certificate', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ userId }),
+    })
+      .then(response => response.json())
+      .then(data => alert(data.message))
+      .catch(error => console.error('Error:', error));
+  }
+</script> -->
+
+</body>
+</html>

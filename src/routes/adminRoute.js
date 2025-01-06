@@ -102,6 +102,18 @@ adminRoute.get(
   paginatedResults(PurchaseHistory),
   adminCtlr.purchase
 );
+adminRoute.get(
+  '/certificate',
+  authMiddleware,
+  adminMiddleware,
+  adminCtlr.certificate
+);
+adminRoute.post(
+  '/unlock-certificate',
+  authMiddleware,
+  adminMiddleware,
+  adminCtlr.unlockCertificate
+);
 adminRoute.get('/setting', authMiddleware, adminMiddleware, adminCtlr.setting);
 adminRoute.post(
   '/setting',

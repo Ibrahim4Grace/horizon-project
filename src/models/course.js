@@ -9,9 +9,13 @@ const courseSchema = new mongoose.Schema(
     },
 
     price: {
-      type: String,
+      type: Number,
       required: true,
       trim: true,
+    },
+    discountedPrice: {
+      type: Number,
+      default: null,
     },
     duration: {
       type: String,

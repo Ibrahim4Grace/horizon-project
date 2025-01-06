@@ -54,7 +54,23 @@
                           </span>
                           <span class="validity" style="font-weight: 600;"><%= course.duration %></span>
                         </div>
-                        <div class="price">#<%= course.price %>.00</div>
+
+                        <div class="price-container">
+                          <% if (course.hasDiscount) { %>
+                            <div class="price">
+                              <div class="original-price" style="text-decoration: line-through; color: #999; font-size: 0.9em;">
+                                ₦<%= course.price.toLocaleString() %>.00
+                              </div>
+                              <div class="discounted-price" style="color: #28a745; font-weight: bold;">
+                                ₦<%= course.displayPrice.toLocaleString() %>.00
+                              </div>
+                            </div>
+                          <% } else { %>
+                            <div class="price">₦<%= course.price.toLocaleString() %>.00</div>
+                          <% } %>
+                        </div>
+                      
+          
                         
                         <% if (course.isPurchased) { %>
                           <button class="purchase-button" disabled style="background-color: #ccc;">
