@@ -30,7 +30,7 @@ export class authService {
     }
 
     // Validate promocode
-    const validPromocodes = ['onoyakebet9ja', 'osha', 'ojo'];
+    const validPromocodes = ['onoyakebet9ja', 'muyiwaja', 'ojo'];
     if (promocode && validPromocodes.includes(promocode.toLowerCase())) {
       userData.appliedDiscount = true;
       userData.promocode = promocode;
