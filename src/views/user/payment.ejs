@@ -195,7 +195,7 @@
                 <div class="checkout-grid">
                   <div class="form-section">
 
-                  <!-- <form id="paymentForm" data-url="/payment/process" method="POST">
+                  <form id="paymentForm" data-url="/payment/process" method="POST">
                     <% if (pin) { %>
                       <input type="hidden" name="pinId" value="<%= pin._id %>">
                       <input type="hidden" name="amount" value="<%= pin.price %>">
@@ -269,9 +269,9 @@
                       <span class="card-text">Pay Now</span>
                       <span class="transfer-text hidden">Generate Transfer Details</span>
                     </button>
-                  </form> -->
+                  </form>
 
-
+<!-- 
                   <form id="paymentForm" data-url="/payment/process" method="POST">
                     <% if (pin) { %>
                       <input type="hidden" name="pinId" value="<%= pin._id %>">
@@ -281,11 +281,11 @@
                       <input type="hidden" name="amount" value="<%= course.price %>">
                     <% } %>
                   
-                    <!-- Important Notice Banner -->
+      
                     <div class="bg-yellow-50 border-l-4 border-yellow-400 p-4 mb-6">
                       <div class="flex">
                         <div class="flex-shrink-0">
-                          <!-- Warning Icon -->
+        
                           <svg class="h-5 w-5 text-yellow-400 dark:text-gray-200" viewBox="0 0 20 20" fill="currentColor">
                             <path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/>
                           </svg>
@@ -298,9 +298,9 @@
                         </div>
                       </div>
                     </div>
+                   
                   
-                    <!-- Bank Transfer Details -->
-                    <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 mb-6">
+                     <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 mb-6">
                       <h3 class="text-lg font-medium text-gray-900 dark:text-gray-100 mb-4">Bank Transfer Details</h3>
                       
                       <div class="space-y-3">
@@ -327,9 +327,8 @@
                           Your profile will be updated once payment is confirmed.
                         </p>
                       </div>
-                    </div>
+                    </div> 
                   
-                    <!-- Card Payment Section (Hidden for now) -->
                     <div id="cardPayment" class="hidden">
                       <div class="form-group mb-4">
                         <label class="text-gray-700 dark:text-gray-200">Payment Method</label>
@@ -346,24 +345,23 @@
                       </div>
                   
                       <div id="cardFields" class="hidden">
-                        <!-- Original card fields remain the same but hidden -->
+                    
                       </div>
                     </div>
-                  
-                    <!-- Submit Button -->
+
                     <button type="button" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 px-4 rounded-lg transition duration-150 ease-in-out" onclick="copyBankDetails()">
                       Copy Bank Details
                     </button>
-                  </form>
+                  </form> -->
                   
-                  <script>
+                  <!-- <script>
                   function copyBankDetails() {
                     const bankDetails = `Bank: Stanbic IBTC\nAccount Holder: Muyiwa James Fadairo\nAccount Number: 0019001963`;
                     navigator.clipboard.writeText(bankDetails)
                       .then(() => alert('Bank details copied to clipboard!'))
                       .catch(err => console.error('Failed to copy text: ', err));
                   }
-                  </script>
+                  </script> -->
 
                   </div>
             
@@ -404,7 +402,7 @@
     </div>
   </div>
 
-  <!-- <script src="../../mail/payment.js"></script>
+  <script src="../../mail/payment.js"></script>
   <script>
 
     // Select the input field and the icon
@@ -476,6 +474,6 @@ startView: "months"
 });
 });
 
- </script> -->
+ </script>
 </body>
 </html>
