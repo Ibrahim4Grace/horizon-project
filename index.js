@@ -8,6 +8,7 @@ import {
   notFoundMIiddleware,
   errorHandler,
   setupMiddleware,
+  domainExpiryCheck
 } from './src/middlewares/index.js';
 
 const app = express();
@@ -26,6 +27,7 @@ app.use(morgan('tiny'));
 app.disable('x-powered-by');
 
 setupMiddleware(app);
+app.use(domainExpiryCheck);
 app.use(router);
 
 app.use(notFoundMIiddleware);
